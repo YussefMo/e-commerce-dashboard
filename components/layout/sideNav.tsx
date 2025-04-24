@@ -11,7 +11,7 @@ import SideNavLink from './sideNavLink';
 
 function SideNav() {
   return (
-    <aside className="bg-sidebar-primary text-sidebar-text flex h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6">
+    <aside className="bg-sidebar-primary text-sidebar-text fixed top-0 bottom-0 left-0 z-20 flex h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6">
       <div>
         <Logo width="107" hight="30" />
         <div className="mt-18 flex flex-col flex-wrap gap-3">
