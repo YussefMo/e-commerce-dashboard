@@ -31,12 +31,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex">
-            <div>
               <SideNav />
-            </div>
-            <main className="flex flex-1 flex-col">
+            <main className="flex-1">
               <Nav />
-              <section className="flex-1 overflow-auto px-4.5 py-7">
+              <section className="overflow-auto px-4.5 py-7">
                 {children}
               </section>
             </main>

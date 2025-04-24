@@ -1,34 +1,27 @@
-import { DashboardCard } from '@/components/dashboard/dashboard-card';
-
 function Page() {
   return (
-    <div className="grid grid-cols-12 grid-rows-14 gap-4 h-[120vh] mt-16 ml-67">
-      <DashboardCard
-        colSpan={4}
-        rowSpan={4}
-        gradientFrom="#ADCDFC"
-        gradientTo="#CBACFE"
-      >
+    <div className="mt-16 ml-67 grid h-[120vh] grid-cols-12 grid-rows-14 gap-4">
+      <div className="col-span-4 row-span-4 rounded-md bg-gradient-to-r from-[#ADCDFC] to-[#CBACFE] dark:bg-gradient-to-tr dark:from-[#92FFC0] dark:to-[#0064FF]">
         1
-      </DashboardCard>
-      <DashboardCard colSpan={4} colStart={5} rowSpan={2}>
+      </div>
+      <div className="bg-card col-span-4 col-start-5 row-span-2 rounded-md">
         2
-      </DashboardCard>
-      <DashboardCard colSpan={4} colStart={5} rowStart={3} rowSpan={2}>
+      </div>
+      <div className="bg-card col-span-4 col-start-5 row-span-2 row-start-3 rounded-md">
         3
-      </DashboardCard>
-      <DashboardCard colSpan={4} colStart={9} rowStart={1} rowSpan={9}>
+      </div>
+      <div className="bg-card col-span-4 col-start-9 row-span-9 row-start-1 rounded-md">
         4
-      </DashboardCard>
-      <DashboardCard colSpan={8} rowStart={5} rowSpan={5}>
+      </div>
+      <div className="bg-card col-span-8 row-span-5 row-start-5 rounded-md">
         5
-      </DashboardCard>
-      <DashboardCard colSpan={9} rowStart={10} rowSpan={5}>
+      </div>
+      <div className="bg-card col-span-9 row-span-5 row-start-10 rounded-md">
         6
-      </DashboardCard>
-      <DashboardCard colSpan={3} colStart={10} rowStart={10} rowSpan={5}>
+      </div>
+      <div className="bg-card col-span-3 col-start-10 row-span-5 row-start-10 rounded-md">
         7
-      </DashboardCard>
+      </div>
     </div>
   );
 }
