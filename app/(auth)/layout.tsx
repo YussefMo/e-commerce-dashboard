@@ -1,3 +1,10 @@
+import '@/app/globals.css';
+import { ThemeProvider } from '@/components/themeProvider';
+
+export const metadata = {
+  title: 'log in to your dashboard',
+};
+
 export default function RootLayout({
   children
 }: Readonly<{
@@ -5,8 +12,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
-        <section>{children}</section>
+      <body className="bg-sidebar-primary-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <section>{children}</section>
+        </ThemeProvider>
       </body>
     </html>
   );
