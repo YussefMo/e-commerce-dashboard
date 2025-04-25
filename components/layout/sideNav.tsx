@@ -8,10 +8,13 @@ import {
 import Image from 'next/image';
 import Logo from '../icons/logo';
 import SideNavLink from './sideNavLink';
+import { getCurrentUser } from '@/lib/action/auth.action';
 
-function SideNav() {
+async function SideNav() {
+  const user = await getCurrentUser();
+
   return (
-    <aside className="bg-sidebar-primary text-sidebar-text fixed top-0 bottom-0 left-0 z-20 flex h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6">
+    <aside className="bg-sidebar-primary text-sidebar-text fixed top-0 bottom-0 left-0 z-20 flex h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6 max-lg:hidden">
       <div>
         <Logo width="107" hight="30" />
         <div className="mt-18 flex flex-col flex-wrap gap-3">
@@ -34,15 +37,15 @@ function SideNav() {
       <div>
         <span className="flex w-full flex-row">
           <Image
-            className="mr-3"
-            src="/Ellipse 2.png"
+            className="mr-3 rounded-full"
+            src="/profile.svg"
             alt="user"
             width={54}
             height={54}
           />
           <span className="flex flex-col">
-            <h2 className="text-2xl font-medium">Ayesha</h2>
-            <p>someone@email.com</p>
+            <h2 className="text-2xl font-medium">{user!.name}</h2>
+            <p>{user!.email}</p>
           </span>
         </span>
       </div>

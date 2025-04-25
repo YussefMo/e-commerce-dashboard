@@ -1,6 +1,6 @@
 function Page() {
   return (
-    <div className="mt-16 ml-67 grid h-[120vh] grid-cols-12 grid-rows-14 gap-4">
+    <div className="grid h-[120vh] grid-cols-12 grid-rows-14 gap-4">
       <div className="col-span-4 row-span-4 rounded-md bg-gradient-to-r from-[#ADCDFC] to-[#CBACFE] dark:bg-gradient-to-tr dark:from-[#92FFC0] dark:to-[#0064FF]">
         1
       </div>
