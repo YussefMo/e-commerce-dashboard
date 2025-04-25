@@ -8,12 +8,11 @@ import {
 import { Suspense } from 'react';
 import Logo from '../icons/logo';
 import SideNavLink from './sideNavLink';
-import UserProfile from './userProfile'; // Import the new UserProfile component
-import UserProfileSkeleton from './userProfileSkeleton'; // Import the skeleton component
+import UserProfile from './userProfile';
+import UserProfileSkeleton from './userProfileSkeleton';
+import { signOut } from '@/lib/action/auth.action';
 
 function SideNav() {
-  // Remove direct data fetching here
-
   return (
     <aside className="bg-sidebar-primary text-sidebar-text fixed top-0 bottom-0 left-0 z-20 flex h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6 max-lg:hidden">
       <div>
@@ -32,6 +31,7 @@ function SideNav() {
             icon={<LogOut />}
             title="Logout"
             href={''}
+            onClick={signOut}
           />
         </div>
       </div>

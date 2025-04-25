@@ -1,5 +1,4 @@
 import '@/app/globals.css';
-import { ThemeProvider } from '@/components/themeProvider';
 import { isAuthenticated } from '@/lib/action/auth.action';
 import { redirect } from 'next/navigation';
 
@@ -16,18 +15,5 @@ export default async function RootLayout({
 
   if (isUserAuthenticated) redirect('/');
 
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="bg-sidebar-primary-foreground">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <section>{children}</section>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+  return <section>{children}</section>;
 }

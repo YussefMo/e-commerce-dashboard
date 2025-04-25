@@ -22,7 +22,7 @@ function SideNavLink({
   }
 
   return (
-    <button className="flex w-full flex-row py-1" onClick={onClick}>
+    <button className="flex w-full flex-row py-1 cursor-pointer" onClick={onClick}>
       {icon} <p className="ml-3 font-medium">{title}</p>
     </button>
   );
