@@ -5,13 +5,14 @@ import {
   Settings,
   ShoppingBasket
 } from 'lucide-react';
-import Image from 'next/image';
+import { Suspense } from 'react';
 import Logo from '../icons/logo';
 import SideNavLink from './sideNavLink';
-import { getCurrentUser } from '@/lib/action/auth.action';
+import UserProfile from './userProfile'; // Import the new UserProfile component
+import UserProfileSkeleton from './userProfileSkeleton'; // Import the skeleton component
 
-async function SideNav() {
-  const user = await getCurrentUser();
+function SideNav() {
+  // Remove direct data fetching here
 
   return (
     <aside className="bg-sidebar-primary text-sidebar-text fixed top-0 bottom-0 left-0 z-20 flex h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6 max-lg:hidden">
@@ -35,19 +36,9 @@ async function SideNav() {
         </div>
       </div>
       <div>
-        <span className="flex w-full flex-row">
-          <Image
-            className="mr-3 rounded-full"
-            src="/profile.svg"
-            alt="user"
-            width={54}
-            height={54}
-          />
-          <span className="flex flex-col">
-            <h2 className="text-2xl font-medium">{user!.name}</h2>
-            <p>{user!.email}</p>
-          </span>
-        </span>
+        <Suspense fallback={<UserProfileSkeleton />}>
+          <UserProfile />
+        </Suspense>
       </div>
     </aside>
   );
