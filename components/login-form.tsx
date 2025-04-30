@@ -79,7 +79,6 @@ export function LoginForm() {
         <div className="grid gap-6">
           <div className="grid gap-3">
             <FormFieldComp
-              control={form.control}
               name="email"
               label="Email"
               placeholder="example@emil.com"
@@ -88,7 +87,6 @@ export function LoginForm() {
           </div>
           <div className="grid gap-3">
             <FormFieldComp
-              control={form.control}
               name="password"
               label="Password"
               type="password"

@@ -14,7 +14,7 @@ async function UserProfile() {
     <span className="flex w-full flex-row">
       <Image
         className="mr-3 rounded-full"
-        src="/profile.svg" // Assuming a default profile image, or use user.imageUrl if available
+        src="/profile.svg"
         alt="user profile picture"
         width={54}
         height={54}

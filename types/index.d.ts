@@ -10,3 +10,15 @@ interface SignInParams {
   email: string;
   idToken: string;
 }
+
+interface AddProductProp {
+  productName: string;
+  category: string;
+  price: number;
+  stock: number;
+  discount?: number;
+  description: string;
+  tags: string[];
+  imageUrls: string[];
+  variety: string[];
+}

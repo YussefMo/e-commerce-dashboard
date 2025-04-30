@@ -1,41 +1,49 @@
 import {
   FormControl,
+  FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from '@/components/UI/form';
 import { Input } from '@/components/UI/input';
-import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import { FieldValues, Path, useFormContext } from 'react-hook-form';
 
 interface FormFieldProps<T extends FieldValues> {
-  control: Control<T>;
   name: Path<T>;
   label: string;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password' | 'file';
+  type?: 'text' | 'email' | 'password' | 'file' | 'number' | 'textarea';
 }
 
 function FormFieldComp({
-  control,
   name,
   label,
   placeholder,
   type = 'text'
 }: FormFieldProps<FieldValues>) {
+  const { control } = useFormContext();
   return (
-    <Controller
+    <FormField
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel className="label">{label}</FormLabel>
           <FormControl>
-            <Input
-              className="input"
-              placeholder={placeholder}
-              {...field}
-              type={type}
-            />
+            {type === 'textarea' ? (
+              <textarea
+                className="input min-h-[100px] rounded-md border p-2"
+                placeholder={placeholder}
+                {...field}
+              />
+            ) : (
+              <Input
+                className="input"
+                placeholder={placeholder}
+                {...field}
+                type={type}
+              />
+            )}
           </FormControl>
           <FormMessage />
         </FormItem>

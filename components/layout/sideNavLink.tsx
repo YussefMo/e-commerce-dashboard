@@ -5,24 +5,32 @@ function SideNavLink({
   title,
   href = '/',
   type = 'link',
-  onClick
+  onClick,
+  active = false
 }: {
   icon: React.ReactNode;
   title: string;
   href: string;
   type?: 'link' | 'button';
   onClick?: () => void;
+  active?: boolean;
 }) {
   if (type === 'link') {
     return (
-      <Link href={href} className="flex w-full flex-row py-1">
+      <Link
+        href={href}
+        className={`flex w-full flex-row py-1 ${active ? 'border-r-7 border-icon' : ''}`}
+      >
         {icon} <p className="ml-3 font-medium">{title}</p>
       </Link>
     );
   }
 
   return (
-    <button className="flex w-full flex-row py-1 cursor-pointer" onClick={onClick}>
+    <button
+      className="flex w-full cursor-pointer flex-row py-1"
+      onClick={onClick}
+    >
       {icon} <p className="ml-3 font-medium">{title}</p>
     </button>
   );
