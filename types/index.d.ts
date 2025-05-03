@@ -22,3 +22,9 @@ interface AddProductProp {
   imageUrls: string[];
   variety: string[];
 }
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool';
+  content: string;
+};

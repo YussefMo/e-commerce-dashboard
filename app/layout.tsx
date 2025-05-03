@@ -16,7 +16,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistPoppins.variable} antialiased`}>
+      <body className={`${geistPoppins.variable} antialiased h-screen`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

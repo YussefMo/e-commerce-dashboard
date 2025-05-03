@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import AiChatToggler from '@/components/AiChatToggler';
 import Nav from '@/components/layout/nav';
 import SideNav from '@/components/layout/sideNav';
 import UserProfile from '@/components/layout/userProfile';
@@ -24,6 +25,7 @@ export default async function RootLayout({
 
   return (
     <div className="flex">
+      <AiChatToggler />
       <SideNav>
         <Suspense fallback={<UserProfileSkeleton />}>
           <UserProfile />
@@ -31,7 +33,7 @@ export default async function RootLayout({
       </SideNav>
       <main className="flex-1">
         <Nav />
-        <section className="mt-16 ml-67 overflow-auto px-4.5 py-7 max-lg:ml-0">
+        <section className="mt-16 ml-67 h-fit overflow-auto px-4.5 py-7 max-lg:ml-0">
           {children}
         </section>
       </main>
