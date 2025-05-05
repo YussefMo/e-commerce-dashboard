@@ -6,8 +6,9 @@ import { InputArray } from '@/components/InputArray';
 import { Button } from '@/components/UI/button';
 import { Form } from '@/components/UI/form';
 import { addProduct } from '@/lib/action/add-product.action';
+import { usePageContext } from '@/lib/PageContextProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -18,9 +19,9 @@ const formSchema = z.object({
   price: z.coerce.number().min(1).max(999999),
   stock: z.coerce.number().min(1).max(999999),
   discount: z.coerce.number().min(0).max(9999),
-  description: z.string().min(20).max(500),
+  description: z.string().min(20).max(2000),
   tags: z.array(z.string()).min(1),
-  imageUrls: z.array(z.string()).min(1),
+  imageUrls: z.array(z.string()).min(1).max(5),
   variety: z.array(z.string()).min(1)
 });
 
@@ -40,6 +41,7 @@ export default function Page() {
     }
   });
   const [submitting, setSubmitting] = useState(false);
+  const { setPageContextData } = usePageContext(); // Get the context setter function
 
   const onSubmit = async (data: AddProductProp) => {
     setSubmitting(true);
@@ -52,6 +54,12 @@ export default function Page() {
     }
     setSubmitting(false);
   };
+
+  const watchedValues = form.watch();
+
+  useEffect(() => {
+    setPageContextData({ pageName: 'add-product', watchedValues });
+  }, [JSON.stringify(watchedValues), setPageContextData]);
 
   return (
     <div className="bg-card mx-auto max-w-3xl rounded-xl p-6">

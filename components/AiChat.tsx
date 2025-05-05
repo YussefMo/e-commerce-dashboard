@@ -2,16 +2,24 @@
 
 import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
-import { useEffect, useState, useRef } from 'react'; // Import useRef
+import { useEffect, useState, useRef } from 'react';
 import { Button } from './UI/button';
+import { usePageContext } from '@/lib/PageContextProvider';
 
 const SESSION_STORAGE_KEY = 'chatMessages';
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 function AiChat() {
   const [initialMessages, setInitialMessages] = useState<Message[] | undefined>(
     undefined
   );
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Create a ref for the messages container
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { pageContextData } = usePageContext(); // Get the context data
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -40,8 +48,15 @@ function AiChat() {
     useChat({
       initialMessages: initialMessages as
         | import('@ai-sdk/ui-utils').Message[]
-        | undefined
+        | undefined,
+      // Pass a function to body to get the latest context on each request
+      body: {
+        get pageContext() {
+          return pageContextData;
+        }
+      }
     });
+
   useEffect(() => {
     if (typeof window !== 'undefined' && initialMessages !== undefined) {
       if (
@@ -67,7 +82,7 @@ function AiChat() {
   return (
     <div
       key={initialMessages ? 'loaded' : 'loading'}
-      className="bg-card mb-25 flex h-[600px] w-[300px] flex-col overflow-auto rounded-lg shadow-2xl dark:shadow-stone-400 dark:shadow-lg border"
+      className="bg-card mb-25 flex h-[600px] w-[300px] flex-col overflow-auto rounded-lg border shadow-2xl dark:shadow-lg dark:shadow-stone-400"
     >
       <div
         ref={messagesEndRef} // Attach the ref to the messages container

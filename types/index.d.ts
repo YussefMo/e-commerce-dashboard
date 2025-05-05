@@ -28,3 +28,8 @@ interface Message {
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool';
   content: string;
 };
+
+interface PageContextProps {
+  pageContextData: any;
+  setPageContextData: (data: any) => void;
+}
