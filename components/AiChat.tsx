@@ -2,11 +2,12 @@
 
 import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { Button } from './UI/button';
 import { usePageContext } from '@/lib/PageContextProvider';
 
 const SESSION_STORAGE_KEY = 'chatMessages';
+const AVAILABLE_TOOLS = ['/getProductDetails'];
 
 interface Message {
   id: string;
@@ -15,10 +16,13 @@ interface Message {
 }
 
 function AiChat() {
+  const [showToolsMenu, setShowToolsMenu] = useState(false);
+  const [filteredTools, setFilteredTools] = useState<string[]>(AVAILABLE_TOOLS);
   const [initialMessages, setInitialMessages] = useState<Message[] | undefined>(
     undefined
   );
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { pageContextData } = usePageContext(); // Get the context data
 
   useEffect(() => {
@@ -37,25 +41,63 @@ function AiChat() {
           {
             id: 'welcome-message',
             role: 'assistant',
-            content: 'Hello! How can I help you today?'
+            content:
+              'Hello! How can I help you today?\n\n' +
+              'Currently accessible pages for the AI:  \n\n' +
+              '- Add product page\n\n' +
+              '- Usage instruction\n\n' +
+              'Type / to see available tools.\n\n'
           }
         ]);
       }
     }
   }, []);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat({
-      initialMessages: initialMessages as
-        | import('@ai-sdk/ui-utils').Message[]
-        | undefined,
-      // Pass a function to body to get the latest context on each request
-      body: {
-        get pageContext() {
-          return pageContextData;
-        }
+  const {
+    messages,
+    input,
+    setInput,
+    handleInputChange: originalHandleInputChange,
+    handleSubmit,
+    isLoading
+  } = useChat({
+    initialMessages: initialMessages as
+      | import('@ai-sdk/ui-utils').Message[]
+      | undefined,
+    // Pass a function to body to get the latest context on each request
+    body: {
+      get pageContext() {
+        return pageContextData;
       }
-    });
+    }
+  });
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    originalHandleInputChange(e);
+    const value = e.target.value;
+    if (value.includes('/') && value.endsWith('/')) {
+      setFilteredTools(AVAILABLE_TOOLS);
+      setShowToolsMenu(true);
+    } else if (value.includes('/')) {
+      const query = value.substring(value.lastIndexOf('/') + 1);
+      setFilteredTools(
+        AVAILABLE_TOOLS.filter((tool) =>
+          tool.toLowerCase().startsWith(`/${query.toLowerCase()}`)
+        )
+      );
+      setShowToolsMenu(true);
+    } else {
+      setShowToolsMenu(false);
+    }
+  };
+
+  const handleToolSelect = (tool: string) => {
+    const lastSlashIndex = input.lastIndexOf('/');
+    const textBeforeSlash = input.substring(0, lastSlashIndex);
+    setInput(textBeforeSlash + tool + ' ');
+    setShowToolsMenu(false);
+    inputRef.current?.focus();
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined' && initialMessages !== undefined) {
@@ -106,16 +148,33 @@ function AiChat() {
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="border-t p-4">
+      <form onSubmit={handleSubmit} className="relative border-t p-4">
         <div className="flex items-center space-x-2">
           <input
+            ref={inputRef}
             name="prompt"
             value={input}
             onChange={handleInputChange}
-            placeholder="Ask something..."
+            placeholder="Ask something... or type / for tools"
             className="focus:ring-icon flex-grow rounded-md border p-2 focus:ring-2 focus:outline-none"
             disabled={isLoading}
+            autoComplete="off"
           />
+          {showToolsMenu && filteredTools.length > 0 && (
+            <div className="bg-card absolute bottom-full left-0 z-10 mb-1 w-full rounded-md border shadow-lg">
+              <ul className="max-h-40 overflow-y-auto">
+                {filteredTools.map((tool) => (
+                  <li
+                    key={tool}
+                    onClick={() => handleToolSelect(tool)}
+                    className="cursor-pointer p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    {tool}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <Button
             type="submit"
             className="bg-icon cursor-pointer disabled:opacity-50"

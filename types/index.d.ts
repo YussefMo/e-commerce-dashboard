@@ -20,14 +20,17 @@ interface AddProductProp {
   description: string;
   tags: string[];
   imageUrls: string[];
-  variety: string[];
+  variety: Array<{
+    type: string;
+    options: string[];
+  }>;
 }
 
 interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool';
   content: string;
-};
+}
 
 interface PageContextProps {
   pageContextData: any;

@@ -5,11 +5,12 @@ import FormFieldComp from '@/components/FormField';
 import { InputArray } from '@/components/InputArray';
 import { Button } from '@/components/UI/button';
 import { Form } from '@/components/UI/form';
+import { Input } from '@/components/UI/input';
 import { addProduct } from '@/lib/action/add-product.action';
 import { usePageContext } from '@/lib/PageContextProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -22,7 +23,14 @@ const formSchema = z.object({
   description: z.string().min(20).max(2000),
   tags: z.array(z.string()).min(1),
   imageUrls: z.array(z.string()).min(1).max(5),
-  variety: z.array(z.string()).min(1)
+  variety: z
+    .array(
+      z.object({
+        type: z.string().min(1, 'Variety type cannot be empty'),
+        options: z.array(z.string()).min(1, 'At least one option is required')
+      })
+    )
+    .min(0)
 });
 
 export default function Page() {
@@ -40,10 +48,18 @@ export default function Page() {
       variety: []
     }
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'variety'
+  });
+
+  const [newVarietyType, setNewVarietyType] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const { setPageContextData } = usePageContext(); // Get the context setter function
 
-  const onSubmit = async (data: AddProductProp) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    // Changed AddProductProp to inferred type for now
     setSubmitting(true);
     form.reset();
     const result = await addProduct(data);
@@ -71,7 +87,6 @@ export default function Page() {
             label="Product Name"
             placeholder="Enter product name"
           />
-
           <Dropdown
             name="category"
             label="Product Category"
@@ -85,7 +100,6 @@ export default function Page() {
               'Gaming'
             ]}
           />
-
           <div className="grid grid-cols-3 gap-4 max-sm:grid-cols-1">
             <FormFieldComp
               name="price"
@@ -106,14 +120,12 @@ export default function Page() {
               type="number"
             />
           </div>
-
           <FormFieldComp
             name="description"
             label="Description"
             placeholder="Enter product description"
             type="textarea"
           />
-
           <InputArray
             values={form.watch('tags')}
             onAdd={(value) =>
@@ -129,7 +141,6 @@ export default function Page() {
             placeholder="Add new tag"
             name="tags"
           />
-
           <InputArray
             values={form.watch('imageUrls')}
             onAdd={(value) =>
@@ -145,23 +156,74 @@ export default function Page() {
             placeholder="Add image URL"
             name="imageUrls"
           />
+          <div>
+            <h3 className="mb-2 text-lg font-medium">Product Varieties</h3>
+            <div className="mb-4 flex items-center gap-2">
+              <Input
+                type="text"
+                placeholder="Enter new variety type (e.g., Color, Size)"
+                value={newVarietyType}
+                onChange={(e) => setNewVarietyType(e.target.value)}
+                className="input"
+              />
+              <Button
+                type="button"
+                onClick={() => {
+                  if (newVarietyType.trim() !== '') {
+                    append({ type: newVarietyType.trim(), options: [] });
+                    setNewVarietyType('');
+                  }
+                }}
+                className="bg-icon cursor-pointer"
+              >
+                Add Type
+              </Button>
+            </div>
 
-          <InputArray
-            values={form.watch('variety')}
-            onAdd={(value) =>
-              form.setValue('variety', [...form.watch('variety'), value])
-            }
-            onRemove={(index) =>
-              form.setValue(
-                'variety',
-                form.watch('variety').filter((_, i) => i !== index)
-              )
-            }
-            label="Product Variety"
-            placeholder="Add Product Variety"
-            name="variety"
-          />
-
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="mb-4 space-y-3 rounded-md border p-4"
+              >
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold">
+                    {form.watch(`variety.${index}.type`)}
+                  </h4>
+                  <Button
+                    type="button"
+                    onClick={() => remove(index)}
+                    variant="destructive"
+                    size="sm"
+                    className='cursor-pointer'
+                  >
+                    Remove Type
+                  </Button>
+                </div>
+                <InputArray
+                  values={form.watch(`variety.${index}.options`)}
+                  onAdd={(value) => {
+                    const currentOptions =
+                      form.getValues(`variety.${index}.options`) || [];
+                    form.setValue(`variety.${index}.options`, [
+                      ...currentOptions,
+                      value
+                    ]);
+                  }}
+                  onRemove={(optionIndex) => {
+                    const currentOptions =
+                      form.getValues(`variety.${index}.options`) || [];
+                    form.setValue(
+                      `variety.${index}.options`,
+                      currentOptions.filter((_, i) => i !== optionIndex)
+                    );
+                  }}
+                  label={`Options for ${form.watch(`variety.${index}.type`)}`}
+                  placeholder={`Add option for ${form.watch(`variety.${index}.type`)}`}
+                  name={`variety.${index}.options`}
+                />
+              </div>
+            ))}
+          </div>
           <Button
             type="submit"
             className="bg-icon w-full cursor-pointer disabled:grayscale"
