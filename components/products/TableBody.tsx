@@ -1,7 +1,16 @@
+import { getAllProducts } from '@/lib/action/product.action';
 import { SquarePen, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 
-function TableBody({ products }: { products: Product[] }) {
+async function TableBody() {
+  const products: Product[] | null = await getAllProducts();
+
+  if (!products || products.length === 0) {
+    return (
+      <div className="p-4 text-center text-gray-500">No products found.</div>
+    );
+  }
+
   const formatDate = (
     dateValue: string | { seconds: number; nanoseconds: number }
   ) => {

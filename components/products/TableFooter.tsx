@@ -1,45 +1,84 @@
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/UI/pagination';
+
 function TableFooter() {
-  const currentPage: number = 4;
-  const totalPages: number = 50;
+  const currentPage: number = 1;
+  const totalPages: number = 10;
+
+  const getPageNumbers = () => {
+    const pages = [];
+
+    pages.push(1);
+
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+
+    // Show pages around current page
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      if (i > 1 && i < totalPages) {
+        pages.push(i);
+      }
+    }
+
+    // Show ellipsis if current page is far from end
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+
+    // Always show last page if different from first
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
 
   return (
-    <div className="border-border mt-6 flex items-center justify-center gap-5 border-t pt-4">
-      <button
-        className="bg-icon hover:bg-icon/80 cursor-pointer rounded-md px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
-        disabled={currentPage === 1}
-      >
-        Previous
-      </button>
-      <div className="flex items-center space-x-2 text-sm">
-        {[1, 2, 3].map((page) => (
-          <button
-            key={page}
-            className={`cursor-pointer rounded-md px-3 py-1 ${currentPage === page ? 'bg-icon cursor-not-allowed text-white' : 'hover:bg-muted'}`}
-          >
-            {String(page).padStart(2, '0')}
-          </button>
+    <Pagination className="mt-6 border-t pt-4">
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            href={currentPage > 1 ? `?page=${currentPage - 1}` : undefined}
+            isActive={currentPage !== 1}
+          />
+        </PaginationItem>
+
+        {getPageNumbers().map((page, index) => (
+          <PaginationItem key={index}>
+            {page === '...' ? (
+              <PaginationEllipsis />
+            ) : (
+              <PaginationLink
+                href={`?page=${page}`}
+                isActive={currentPage === page}
+              >
+                {page}
+              </PaginationLink>
+            )}
+          </PaginationItem>
         ))}
-        {totalPages > 5 && <span className="text-muted-foreground">...</span>}
-        {totalPages > 4 && (
-          <button
-            className={`cursor-pointer rounded-md px-3 py-1 ${currentPage === totalPages - 1 ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}
-          >
-            {totalPages - 1}
-          </button>
-        )}
-        <button
-          className={`cursor-pointer rounded-md px-3 py-1 ${currentPage === totalPages ? 'bg-Icon text-white disabled:cursor-not-allowed' : 'text-muted-foreground hover:bg-muted'}`}
-        >
-          {totalPages}
-        </button>
-      </div>
-      <button
-        className="bg-icon hover:bg-icon/80 cursor-pointer rounded-md px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
-        disabled={currentPage === totalPages}
-      >
-        Next
-      </button>
-    </div>
+
+        <PaginationItem>
+          <PaginationNext
+            href={
+              currentPage < totalPages ? `?page=${currentPage + 1}` : undefined
+            }
+            isActive={currentPage !== totalPages}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 }
 

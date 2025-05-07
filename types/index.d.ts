@@ -40,6 +40,8 @@ interface Products {
     type: string;
     options: string[];
   }>;
+  createdAt: string | { seconds: number; nanoseconds: number };
+  map(arg0: (product: any) => React.JSX.Element): React.ReactNode;
 }
 
 interface Message {

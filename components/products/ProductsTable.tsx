@@ -1,18 +1,10 @@
-import { getAllProducts } from '@/lib/action/product.action';
 import { Search } from 'lucide-react';
-import TableHeader from './TableHeader';
 import TableBody from './TableBody';
 import TableFooter from './TableFooter';
+import { Suspense } from 'react';
+import ProductsTableSkeleton from './products-table-skeleton';
 
 async function ProductsTable() {
-  const products: Product[] | null = await getAllProducts();
-
-  if (!products || products.length === 0) {
-    return (
-      <div className="p-4 text-center text-gray-500">No products found.</div>
-    );
-  }
-
   return (
     <div className="bg-card text-foreground rounded-lg p-4 shadow-md sm:p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -29,13 +21,14 @@ async function ProductsTable() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="divide-border min-w-full divide-y">
-          <TableBody products={products} />
-        </table>
-      </div>
+      <Suspense fallback={<ProductsTableSkeleton />}>
+        <div className="overflow-x-auto">
+          <table className="divide-border min-w-full divide-y">
+            <TableBody />
+          </table>
+        </div>
+      </Suspense>
 
-      {/* Pagination */}
       <TableFooter />
     </div>
   );
