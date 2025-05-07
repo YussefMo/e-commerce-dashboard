@@ -7,7 +7,10 @@ export async function addProduct(data: AddProductProp) {
   const user = await getCurrentUser();
   if (user?.role === 'admin') {
     try {
-      await db.collection('products').add(data);
+      await db.collection('products').add({
+        ...data,
+        createdAt: new Date().toISOString()
+      });
       return {
         success: true,
         message: 'product added successfully'

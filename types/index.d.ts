@@ -52,3 +52,13 @@ interface PageContextProps {
   pageContextData: any;
   setPageContextData: (data: any) => void;
 }
+
+interface Product {
+  map(arg0: (product: any) => React.JSX.Element): React.ReactNode;
+  id: string;
+  productName: string;
+  imageUrls: string[];
+  price: number;
+  stock: number;
+  createdAt: string | { seconds: number; nanoseconds: number };
+}
