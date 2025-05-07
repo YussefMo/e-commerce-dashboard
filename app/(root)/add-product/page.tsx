@@ -1,41 +1,28 @@
 'use client';
 
+import { uploadImages } from '@/cloudinary/cloudinary';
+import DragAndDropInput from '@/components/DragAndDropInput';
 import { Dropdown } from '@/components/Dropdown';
 import FormFieldComp from '@/components/FormField';
 import { InputArray } from '@/components/InputArray';
+import ProductVarieties from '@/components/ProductVarieties';
 import { Button } from '@/components/UI/button';
 import { Form } from '@/components/UI/form';
-import { Input } from '@/components/UI/input';
-import { addProduct } from '@/lib/action/add-product.action';
+import { addProduct } from '@/lib/action/product.action';
 import { usePageContext } from '@/lib/PageContextProvider';
+import {
+  addProductFormSchema,
+  AddProductFormValues
+} from '@/lib/schemas/add-product-schema';
+import { handleAddFile, handleRemoveFile } from '@/lib/utils/form-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useEffect } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
-
-const formSchema = z.object({
-  productName: z.string().min(3).max(25),
-  category: z.string().min(1),
-  price: z.coerce.number().min(1).max(999999),
-  stock: z.coerce.number().min(1).max(999999),
-  discount: z.coerce.number().min(0).max(9999),
-  description: z.string().min(20).max(2000),
-  tags: z.array(z.string()).min(1),
-  imageUrls: z.array(z.string()).min(1).max(5),
-  variety: z
-    .array(
-      z.object({
-        type: z.string().min(1, 'Variety type cannot be empty'),
-        options: z.array(z.string()).min(1, 'At least one option is required')
-      })
-    )
-    .min(0)
-});
 
 export default function Page() {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
+  const form = useForm<AddProductFormValues>({
+    resolver: zodResolver(addProductFormSchema),
     defaultValues: {
       productName: '',
       category: '',
@@ -44,29 +31,38 @@ export default function Page() {
       discount: 0,
       description: '',
       tags: [],
-      imageUrls: [],
+      imageFiles: [],
       variety: []
     }
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'variety'
-  });
-
-  const [newVarietyType, setNewVarietyType] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const { setPageContextData } = usePageContext(); // Get the context setter function
+  const { setPageContextData } = usePageContext();
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    // Changed AddProductProp to inferred type for now
+  const onSubmit = async (data: AddProductFormValues) => {
     setSubmitting(true);
-    form.reset();
-    const result = await addProduct(data);
-    if (result.success) {
-      toast.success(result.message);
-    } else {
-      toast.error(result.message);
+    try {
+      const uploadedImageUrls = await uploadImages(data.imageFiles);
+      const productDataToSave: AddProductProp = {
+        ...data,
+        imageUrls: uploadedImageUrls,
+        // @ts-ignore
+        imageFiles: undefined
+      };
+      // @ts-ignore
+      delete productDataToSave.imageFiles;
+
+      const result = await addProduct(productDataToSave);
+
+      if (result.success) {
+        toast.success(result.message);
+        form.reset();
+      } else {
+        toast.error(result.message || 'An unknown error occurred.');
+      }
+    } catch (error: any) {
+      console.error('Error submitting product:', error);
+      toast.error(error.message || 'Failed to add product. Please try again.');
     }
     setSubmitting(false);
   };
@@ -78,161 +74,102 @@ export default function Page() {
   }, [JSON.stringify(watchedValues), setPageContextData]);
 
   return (
-    <div className="bg-card mx-auto max-w-3xl rounded-xl p-6">
-      <h1 className="mb-6 text-2xl font-bold">Add New Product</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormFieldComp
-            name="productName"
-            label="Product Name"
-            placeholder="Enter product name"
-          />
-          <Dropdown
-            name="category"
-            label="Product Category"
-            placeholder="Select a category"
-            options={[
-              'Smart Phones',
-              'Smart Watches',
-              'Cameras',
-              'Headphones',
-              'Computer',
-              'Gaming'
-            ]}
-          />
-          <div className="grid grid-cols-3 gap-4 max-sm:grid-cols-1">
-            <FormFieldComp
-              name="price"
-              label="Price"
-              placeholder="Enter price"
-              type="number"
-            />
-            <FormFieldComp
-              name="stock"
-              label="Stock"
-              placeholder="Enter stock quantity"
-              type="number"
-            />
-            <FormFieldComp
-              name="discount"
-              label="Discount"
-              placeholder="Enter Discount"
-              type="number"
-            />
-          </div>
-          <FormFieldComp
-            name="description"
-            label="Description"
-            placeholder="Enter product description"
-            type="textarea"
-          />
-          <InputArray
-            values={form.watch('tags')}
-            onAdd={(value) =>
-              form.setValue('tags', [...form.watch('tags'), value])
-            }
-            onRemove={(index) =>
-              form.setValue(
-                'tags',
-                form.watch('tags').filter((_, i) => i !== index)
-              )
-            }
-            label="Product Tags"
-            placeholder="Add new tag"
-            name="tags"
-          />
-          <InputArray
-            values={form.watch('imageUrls')}
-            onAdd={(value) =>
-              form.setValue('imageUrls', [...form.watch('imageUrls'), value])
-            }
-            onRemove={(index) =>
-              form.setValue(
-                'imageUrls',
-                form.watch('imageUrls').filter((_, i) => i !== index)
-              )
-            }
-            label="Image URLs"
-            placeholder="Add image URL"
-            name="imageUrls"
-          />
-          <div>
-            <h3 className="mb-2 text-lg font-medium">Product Varieties</h3>
-            <div className="mb-4 flex items-center gap-2">
-              <Input
-                type="text"
-                placeholder="Enter new variety type (e.g., Color, Size)"
-                value={newVarietyType}
-                onChange={(e) => setNewVarietyType(e.target.value)}
-                className="input"
+    <div className="bg-background text-foreground min-h-screen p-4 sm:p-6 lg:p-8">
+      <div className="bg-card mx-auto max-w-4xl rounded-2xl p-6 shadow-xl sm:p-8 lg:p-10">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold sm:text-4xl">Add New Product</h1>
+          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+            Fill in the details below to add a new product to your catalog.
+          </p>
+        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <FormFieldComp
+                name="productName"
+                label="Product Name"
+                placeholder="e.g. iPhone 15 Pro"
               />
-              <Button
-                type="button"
-                onClick={() => {
-                  if (newVarietyType.trim() !== '') {
-                    append({ type: newVarietyType.trim(), options: [] });
-                    setNewVarietyType('');
-                  }
-                }}
-                className="bg-icon cursor-pointer"
-              >
-                Add Type
-              </Button>
+              <Dropdown
+                name="category"
+                label="Product Category"
+                placeholder="Select a category"
+                options={[
+                  'Smart Phones',
+                  'Smart Watches',
+                  'Cameras',
+                  'Headphones',
+                  'Computer',
+                  'Gaming'
+                ]}
+              />
             </div>
 
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="mb-4 space-y-3 rounded-md border p-4"
-              >
-                <div className="flex items-center justify-between">
-                  <h4 className="font-semibold">
-                    {form.watch(`variety.${index}.type`)}
-                  </h4>
-                  <Button
-                    type="button"
-                    onClick={() => remove(index)}
-                    variant="destructive"
-                    size="sm"
-                    className='cursor-pointer'
-                  >
-                    Remove Type
-                  </Button>
-                </div>
-                <InputArray
-                  values={form.watch(`variety.${index}.options`)}
-                  onAdd={(value) => {
-                    const currentOptions =
-                      form.getValues(`variety.${index}.options`) || [];
-                    form.setValue(`variety.${index}.options`, [
-                      ...currentOptions,
-                      value
-                    ]);
-                  }}
-                  onRemove={(optionIndex) => {
-                    const currentOptions =
-                      form.getValues(`variety.${index}.options`) || [];
-                    form.setValue(
-                      `variety.${index}.options`,
-                      currentOptions.filter((_, i) => i !== optionIndex)
-                    );
-                  }}
-                  label={`Options for ${form.watch(`variety.${index}.type`)}`}
-                  placeholder={`Add option for ${form.watch(`variety.${index}.type`)}`}
-                  name={`variety.${index}.options`}
-                />
-              </div>
-            ))}
-          </div>
-          <Button
-            type="submit"
-            className="bg-icon w-full cursor-pointer disabled:grayscale"
-            disabled={submitting}
-          >
-            Create Product
-          </Button>
-        </form>
-      </Form>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <FormFieldComp
+                name="price"
+                label="Price ($)"
+                placeholder="e.g. 999.99"
+                type="number"
+              />
+              <FormFieldComp
+                name="stock"
+                label="Stock Quantity"
+                placeholder="e.g. 100"
+                type="number"
+              />
+              <FormFieldComp
+                name="discount"
+                label="Discount (%)"
+                placeholder="e.g. 10"
+                type="number"
+              />
+            </div>
+
+            <FormFieldComp
+              name="description"
+              label="Product Description"
+              placeholder="Provide a detailed description of the product..."
+              type="textarea"
+            />
+
+            <InputArray
+              values={form.watch('tags')}
+              onAdd={(value) =>
+                form.setValue('tags', [...form.watch('tags'), value as string])
+              }
+              onRemove={(index) =>
+                form.setValue(
+                  'tags',
+                  form.watch('tags').filter((_, i) => i !== index)
+                )
+              }
+              label="Product Tags"
+              placeholder="Add a tag and press Enter"
+              name="tags"
+            />
+
+            <ProductVarieties form={form} control={form.control} />
+
+            <DragAndDropInput
+              form={form}
+              name="imageFiles"
+              label="Product Images (max 5 images, 5MB per image)"
+              values={form.watch('imageFiles') || []}
+              onAdd={(file) => handleAddFile(form, file)}
+              onRemove={(index) => handleRemoveFile(form, index)}
+            />
+
+            <Button
+              type="submit"
+              className="bg-icon hover:bg-icon/90 text-primary-foreground w-full cursor-pointer rounded-lg py-3 font-semibold transition-colors duration-300 ease-in-out disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={submitting}
+            >
+              {submitting ? 'Creating Product...' : 'Create Product'}
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 }

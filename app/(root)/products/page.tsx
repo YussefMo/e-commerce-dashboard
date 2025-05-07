@@ -1,9 +1,9 @@
 function Page() {
   return (
-    <div>
-      Page
-    </div>
-  )
+    <>
+      <h1>Products</h1>
+    </>
+  );
 }
 
-export default Page
+export default Page;

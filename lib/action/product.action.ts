@@ -15,14 +15,24 @@ export async function addProduct(data: AddProductProp) {
     } catch (err: any) {
       return {
         success: false,
-        message: 'there was an error',
-        err
+        message:
+          err.message ||
+          'An unexpected error occurred while adding the product.'
       };
     }
   } else {
     return {
       success: false,
       message: 'you are not an admin'
-    }
+    };
   }
+}
+
+export async function getAllProducts(): Promise<Products[] | null> {
+  const products = await db.collection('products').get();
+
+  return products.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Products[];
 }

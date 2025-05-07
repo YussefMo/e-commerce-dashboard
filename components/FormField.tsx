@@ -32,7 +32,7 @@ function FormFieldComp({
           <FormControl>
             {type === 'textarea' ? (
               <textarea
-                className="input min-h-[100px] rounded-md border p-2"
+                className="input min-h-[120px] rounded-md border p-2"
                 placeholder={placeholder}
                 {...field}
               />

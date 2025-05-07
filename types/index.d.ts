@@ -26,6 +26,22 @@ interface AddProductProp {
   }>;
 }
 
+interface Products {
+  id: string;
+  productName: string;
+  category: string;
+  price: number;
+  stock: number;
+  discount?: number;
+  description: string;
+  tags: string[];
+  imageUrls: string[];
+  variety: Array<{
+    type: string;
+    options: string[];
+  }>;
+}
+
 interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool';
