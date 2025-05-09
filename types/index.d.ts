@@ -68,9 +68,22 @@ interface Product {
 interface searchParamsPagination {
   searchParams: {
     page?: string;
+    search?: string;
   };
 }
 
 interface ProductsTableProps {
   currentPage: number;
+  children: React.ReactNode
+  search: string | undefined
+}
+
+interface TableBodyProps {
+  products: Products[] | null;
+}
+
+interface SearchInputProps {
+  defaultValue: string | undefined
+  currentPage: number
+  products: Product[]
 }

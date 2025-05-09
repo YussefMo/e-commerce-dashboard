@@ -32,10 +32,19 @@ export async function addProduct(data: AddProductProp) {
   }
 }
 
-export async function getAllProducts(
-  page: number = 1
+export async function getAllProductsWithAction(
+  page: number = 1,
+  search?: string
 ): Promise<{ products: Products[]; totalPages: number } | null> {
-  const productsRef = db.collection('products');
+  let productsRef = db.collection('products');
+
+  if (search) {
+    // @ts-ignore
+    productsRef = productsRef
+      .where('productName', '>=', search)
+      .where('productName', '<=', search + '\uf8ff');
+  }
+
   const snapshot = await productsRef.count().get();
   const totalProducts = snapshot.data().count;
   const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
@@ -43,18 +52,31 @@ export async function getAllProducts(
   const offset = (page - 1) * PRODUCTS_PER_PAGE;
 
   const productsQuery = await productsRef
-    .orderBy('createdAt', 'desc') // Assuming you want to order by creation date
+    .orderBy('createdAt', 'desc')
     .limit(PRODUCTS_PER_PAGE)
     .offset(offset)
     .get();
 
-  const products = productsQuery.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data()
-  })) as Products[];
+  const products = productsQuery.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      createdAt: data.createdAt?.toDate().toISOString()
+    };
+  }) as Products[];
 
   return {
     products,
     totalPages
   };
+}
+
+export async function getAllProducts(): Promise<Products[] | null> {
+  const products = await db.collection('products').get();
+
+  return products.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Products[];
 }
