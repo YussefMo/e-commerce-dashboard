@@ -1,10 +1,11 @@
-import { getAllProducts } from '@/lib/action/product.action';
 import { SquarePen, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 
-async function TableBody() {
-  const products: Product[] | null = await getAllProducts();
+interface TableBodyProps {
+  products: Products[] | null;
+}
 
+async function TableBody({ products }: TableBodyProps) {
   if (!products || products.length === 0) {
     return (
       <div className="p-4 text-center text-gray-500">No products found.</div>

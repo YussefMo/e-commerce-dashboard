@@ -1,5 +1,6 @@
 'use server';
 
+import { PRODUCTS_PER_PAGE } from '../utils';
 import { db } from '@/firebase/admin';
 import { getCurrentUser } from './auth.action';
 
@@ -31,11 +32,29 @@ export async function addProduct(data: AddProductProp) {
   }
 }
 
-export async function getAllProducts(): Promise<Products[] | null> {
-  const products = await db.collection('products').get();
+export async function getAllProducts(
+  page: number = 1
+): Promise<{ products: Products[]; totalPages: number } | null> {
+  const productsRef = db.collection('products');
+  const snapshot = await productsRef.count().get();
+  const totalProducts = snapshot.data().count;
+  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
 
-  return products.docs.map((doc) => ({
+  const offset = (page - 1) * PRODUCTS_PER_PAGE;
+
+  const productsQuery = await productsRef
+    .orderBy('createdAt', 'desc') // Assuming you want to order by creation date
+    .limit(PRODUCTS_PER_PAGE)
+    .offset(offset)
+    .get();
+
+  const products = productsQuery.docs.map((doc) => ({
     id: doc.id,
     ...doc.data()
   })) as Products[];
+
+  return {
+    products,
+    totalPages
+  };
 }

@@ -64,3 +64,13 @@ interface Product {
   stock: number;
   createdAt: string | { seconds: number; nanoseconds: number };
 }
+
+interface searchParamsPagination {
+  searchParams: {
+    page?: string;
+  };
+}
+
+interface ProductsTableProps {
+  currentPage: number;
+}

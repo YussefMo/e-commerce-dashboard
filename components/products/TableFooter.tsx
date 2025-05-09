@@ -8,10 +8,12 @@ import {
   PaginationPrevious
 } from '@/components/UI/pagination';
 
-function TableFooter() {
-  const currentPage: number = 1;
-  const totalPages: number = 10;
+interface TableFooterProps {
+  currentPage: number;
+  totalPages: number;
+}
 
+function TableFooter({ currentPage, totalPages }: TableFooterProps) {
   const getPageNumbers = () => {
     const pages = [];
 
