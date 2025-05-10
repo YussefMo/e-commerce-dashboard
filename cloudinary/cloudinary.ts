@@ -1,5 +1,6 @@
 'use server';
 
+import { getCurrentUser } from '@/lib/action/auth.action';
 import {
   v2 as cloudinary,
   UploadApiResponse,
@@ -13,7 +14,13 @@ cloudinary.config({
   secure: true
 });
 
+const user = await getCurrentUser();
+const isAdmin = user?.role === 'admin';
+
 export async function uploadImage(file: File): Promise<string> {
+  if (!isAdmin) {
+    throw new Error('Unauthorized');
+  }
   return new Promise(async (resolve, reject) => {
     try {
       const arrayBuffer = await file.arrayBuffer();
@@ -46,6 +53,9 @@ export async function uploadImage(file: File): Promise<string> {
 }
 
 export async function uploadImages(files: File[]): Promise<string[]> {
+  if (!isAdmin) {
+    throw new Error('Unauthorized');
+  }
   const uploadPromises = files.map((file) => uploadImage(file));
   try {
     const imageUrls = await Promise.all(uploadPromises);
@@ -64,6 +74,9 @@ export async function uploadImages(files: File[]): Promise<string[]> {
 
 // Helper function to extract public ID from Cloudinary URL
 function getPublicIdFromUrl(imageUrl: string): string | null {
+  if (!isAdmin) {
+    throw new Error('Unauthorized');
+  }
   try {
     const urlParts = imageUrl.split('/');
     const publicIdWithFormat = urlParts
@@ -93,6 +106,9 @@ function getPublicIdFromUrl(imageUrl: string): string | null {
 }
 
 export async function deleteImageByPublicId(publicId: string): Promise<void> {
+  if (!isAdmin) {
+    throw new Error('Unauthorized');
+  }
   return new Promise((resolve, reject) => {
     cloudinary.uploader.destroy(
       publicId,
@@ -125,6 +141,9 @@ export async function deleteImageByPublicId(publicId: string): Promise<void> {
 }
 
 export async function deleteImagesByUrls(imageUrls: string[]): Promise<void> {
+  if (!isAdmin) {
+    throw new Error('Unauthorized');
+  }
   if (!imageUrls || imageUrls.length === 0) {
     return;
   }
@@ -158,6 +177,9 @@ export async function replaceImages(
   existingImageUrls: string[],
   newImageFiles: File[]
 ): Promise<string[]> {
+  if (!isAdmin) {
+    throw new Error('Unauthorized');
+  }
   // If there are no new files to upload, return the existing URLs
   if (!newImageFiles || newImageFiles.length === 0) {
     return existingImageUrls;
