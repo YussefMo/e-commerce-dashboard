@@ -2,6 +2,7 @@ import '@/app/globals.css';
 import { ThemeProvider } from '@/components/themeProvider';
 import { Poppins } from 'next/font/google';
 import { Toaster } from 'sonner';
+import { Analytics } from "@vercel/analytics/next"
 
 const geistPoppins = Poppins({
   variable: '--font-Poppins',
@@ -20,6 +21,7 @@ export default async function RootLayout({
         className={`${geistPoppins.variable} h-screen antialiased`}
         suppressHydrationWarning={true}
       >
+        <Analytics />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

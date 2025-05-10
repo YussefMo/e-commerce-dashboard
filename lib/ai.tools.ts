@@ -1,6 +1,8 @@
 import { db } from '@/firebase/admin';
 import { tool } from 'ai';
 import { z } from 'zod';
+import { getCurrentUser } from './action/auth.action';
+import { deleteProduct } from './action/product.action';
 
 export const getProductDetailsTool = tool({
   description: `Get details for a specific product or a list of products from the Firestore database. 
@@ -39,6 +41,52 @@ export const getProductDetailsTool = tool({
     } catch (error) {
       console.error('Error fetching product details from Firestore:', error);
       return 'There was an error trying to fetch product details. Please try again later.';
+    }
+  }
+});
+
+export const deleteProductTool = tool({
+  description:
+    'based on product name you will delete it from the db only use it when user asks about deleting a specific product',
+  parameters: z.object({
+    productName: z
+      .string()
+      .optional()
+      .describe(
+        `The name of the product to search for. If not provided don't go any further in this tool`
+      )
+  }),
+  execute: async ({ productName }) => {
+    try {
+
+      const user = await getCurrentUser();
+      const isAdmin = user?.role === 'admin';
+      if (isAdmin) {
+        let productsData: any[] = [];
+        const productsRef = db.collection('products');
+        let queryVar;
+
+        if (productName) {
+          queryVar = productsRef.where('productName', '==', productName);
+        } else {
+          return `you did't provide a product name`;
+        }
+        
+        const querySnapshot = await queryVar.get();
+        querySnapshot.forEach((doc) => {
+          productsData.push({ id: doc.id, ...doc.data() });
+        });
+        
+        if (productsData.length > 0) {
+          await deleteProduct(productsData[0].id, productsData[0].imageUrls);
+        }
+
+        return `product ${productName} deleted successfully`;
+      } else {
+        return `sorry you're not an admin to preform this action`;
+      }
+    } catch {
+      return `There was an error trying to fetch or delete product details. Please try again later.`;
     }
   }
 });

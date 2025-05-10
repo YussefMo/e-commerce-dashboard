@@ -7,7 +7,7 @@ import { Button } from './UI/button';
 import { usePageContext } from '@/lib/PageContextProvider';
 
 const SESSION_STORAGE_KEY = 'chatMessages';
-const AVAILABLE_TOOLS = ['/getProductDetails'];
+const AVAILABLE_TOOLS = ['/getProductDetails', '/deleteProduct'];
 
 interface Message {
   id: string;
