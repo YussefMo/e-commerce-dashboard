@@ -1,5 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import clsx from 'clsx';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface TableFooterProps {
   currentPage: number;
@@ -7,6 +11,15 @@ interface TableFooterProps {
 }
 
 function TableFooter({ currentPage, totalPages }: TableFooterProps) {
+  const router = useRouter();
+
+  // Prefetch the next page when component mounts or currentPage changes
+  useEffect(() => {
+    if (currentPage < totalPages) {
+      router.prefetch(`?page=${currentPage + 1}`);
+    }
+  }, [currentPage, totalPages, router]);
+
   const getPageNumbers = (): (number | string)[] => {
     const pages: (number | string)[] = [1];
 
@@ -47,13 +60,13 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
       <nav className="flex items-center gap-3">
         <Link
           href={currentPage > 1 ? `?page=${currentPage - 1}` : '#'}
-          className={linkClass(currentPage !== 1)}
+          className={`${linkClass(currentPage !== 1)} ${currentPage === 1 && 'cursor-not-allowed'}`}
           aria-disabled={currentPage === 1}
         >
           Previous
         </Link>
 
-        <div className='flex gap-1'>
+        <div className="flex gap-1">
           {getPageNumbers().map((page, index) => (
             <span key={index}>
               {page === '...' ? (
@@ -72,7 +85,7 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
 
         <Link
           href={currentPage < totalPages ? `?page=${currentPage + 1}` : '#'}
-          className={linkClass(currentPage !== totalPages)}
+          className={`${linkClass(currentPage !== totalPages)} ${currentPage === totalPages && 'cursor-not-allowed'}`}
           aria-disabled={currentPage === totalPages}
         >
           Next
