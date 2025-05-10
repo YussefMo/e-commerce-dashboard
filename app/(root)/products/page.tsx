@@ -10,7 +10,11 @@ async function Page({ searchParams }: searchParamsPagination) {
   return (
     <Suspense fallback={<ProductsTableSkeleton />}>
       <ProductsTable currentPage={currentPage} search={search}>
-        <SearchInput defaultValue={search} currentPage={currentPage} products={[]} />
+        <SearchInput
+          defaultValue={search}
+          currentPage={currentPage}
+          products={[]}
+        />
       </ProductsTable>
     </Suspense>
   );
