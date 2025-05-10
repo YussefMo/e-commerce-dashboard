@@ -1,8 +1,8 @@
 import '@/app/globals.css';
 import { ThemeProvider } from '@/components/themeProvider';
+import { Analytics } from '@vercel/analytics/next';
 import { Poppins } from 'next/font/google';
 import { Toaster } from 'sonner';
-import { Analytics } from "@vercel/analytics/next"
 
 const geistPoppins = Poppins({
   variable: '--font-Poppins',
