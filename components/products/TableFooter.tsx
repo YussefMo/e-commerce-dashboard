@@ -4,6 +4,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface TableFooterProps {
   currentPage: number;
@@ -53,7 +54,7 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
 
   const linkClass = (active: boolean) =>
     clsx(
-      'px-3 py-1 rounded-md border text-sm',
+      'px-3 py-1 rounded-md border text-sm flex items-center',
       active
         ? 'bg-icon text-white border-primary'
         : 'hover:bg-muted border-input text-muted-foreground'
@@ -67,6 +68,7 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
           className={`${linkClass(currentPage !== 1)} ${currentPage === 1 && 'cursor-not-allowed'}`}
           aria-disabled={currentPage === 1}
         >
+          <ChevronLeft />
           Previous
         </Link>
 
@@ -93,6 +95,7 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
           aria-disabled={currentPage === totalPages}
         >
           Next
+          <ChevronRight />
         </Link>
       </nav>
     </div>
