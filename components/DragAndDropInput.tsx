@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { AddProductFormValues } from '@/lib/schemas/add-product-schema';
+import { AddProductFormValues } from '@/lib/schemas/product-schema';
 import { Button } from '@/components/UI/button';
 import { Input } from '@/components/UI/input';
 import { X } from 'lucide-react';
@@ -62,10 +62,7 @@ const DragAndDropInput: React.FC<DragAndDropInputProps> = ({
 
   return (
     <div className="space-y-2">
-      <label
-        htmlFor={name as string}
-        className="block text-sm font-medium"
-      >
+      <label htmlFor={name as string} className="block text-sm font-medium">
         {label}
       </label>
       <div

@@ -61,3 +61,118 @@ export async function uploadImages(files: File[]): Promise<string[]> {
     }
   }
 }
+
+// Helper function to extract public ID from Cloudinary URL
+function getPublicIdFromUrl(imageUrl: string): string | null {
+  try {
+    const urlParts = imageUrl.split('/');
+    const publicIdWithFormat = urlParts
+      .slice(urlParts.indexOf('upload') + 2)
+      .join('/');
+    const publicId = publicIdWithFormat.substring(
+      0,
+      publicIdWithFormat.lastIndexOf('.')
+    );
+    // Ensure the public ID includes the folder if it exists
+    // Example URL: https://res.cloudinary.com/demo/image/upload/v123/folder/image.jpg
+    // Public ID should be: folder/image
+    if (urlParts.includes('e-commerce-dashboard-products')) {
+      const folderIndex = urlParts.indexOf('e-commerce-dashboard-products');
+      if (folderIndex > -1 && folderIndex < urlParts.length - 1) {
+        return urlParts
+          .slice(folderIndex)
+          .join('/')
+          .substring(0, urlParts.slice(folderIndex).join('/').lastIndexOf('.'));
+      }
+    }
+    return publicId;
+  } catch (error) {
+    console.error('Error extracting public ID from URL:', imageUrl, error);
+    return null;
+  }
+}
+
+export async function deleteImageByPublicId(publicId: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(
+      publicId,
+      { resource_type: 'image' },
+      (error, result) => {
+        if (error) {
+          console.error(
+            `Failed to delete image ${publicId} from Cloudinary:`,
+            error
+          );
+          reject(error.message || `Failed to delete image ${publicId}`);
+        } else {
+          if (
+            result &&
+            result.result !== 'ok' &&
+            result.result !== 'not found'
+          ) {
+            console.warn(
+              `Cloudinary deletion of ${publicId} result was not 'ok':`,
+              result.result
+            );
+            // Potentially reject here if 'not found' is also an error for your use case
+            // For now, we resolve as the operation itself didn't throw an SDK error
+          }
+          resolve();
+        }
+      }
+    );
+  });
+}
+
+export async function deleteImagesByUrls(imageUrls: string[]): Promise<void> {
+  if (!imageUrls || imageUrls.length === 0) {
+    return;
+  }
+  const deletePromises = imageUrls.map((url) => {
+    const publicId = getPublicIdFromUrl(url);
+    if (publicId) {
+      return deleteImageByPublicId(publicId);
+    } else {
+      console.warn(
+        `Could not extract public_id from URL: ${url}, skipping deletion.`
+      );
+      return Promise.resolve(); // Resolve to not break Promise.all
+    }
+  });
+
+  try {
+    await Promise.all(deletePromises);
+  } catch (error) {
+    console.error('Error deleting one or more images from Cloudinary:', error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete one or more images: ${error.message}`);
+    } else {
+      throw new Error(
+        'Failed to delete one or more images due to an unknown error.'
+      );
+    }
+  }
+}
+
+export async function replaceImages(
+  existingImageUrls: string[],
+  newImageFiles: File[]
+): Promise<string[]> {
+  // If there are no new files to upload, return the existing URLs
+  if (!newImageFiles || newImageFiles.length === 0) {
+    return existingImageUrls;
+  }
+
+  // If there are new files, first delete the old ones
+  if (existingImageUrls && existingImageUrls.length > 0) {
+    try {
+      await deleteImagesByUrls(existingImageUrls);
+    } catch (error) {
+      console.error(
+        'Failed to delete existing images, proceeding with upload anyway:',
+        error
+      );
+    }
+  }
+  return uploadImages(newImageFiles);
+}

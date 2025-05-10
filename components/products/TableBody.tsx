@@ -1,5 +1,7 @@
-import { SquarePen, Trash2 } from 'lucide-react';
+import { SquarePen } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import DeleteAlert from './DeleteAlert';
 
 interface TableBodyProps {
   products: Products[] | null;
@@ -74,19 +76,15 @@ function TableBody({ products }: TableBodyProps) {
           <td className="text-muted-foreground px-6 py-4 text-sm whitespace-nowrap">
             {formatDate(product.createdAt)}
           </td>
-          <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
-            <button
+          <td className="flex items-center px-6 py-6 text-sm font-medium whitespace-nowrap">
+            <Link
+              href={`/products/${product.id}`}
               className="text-primary hover:text-primary/80 mr-2 cursor-pointer"
               title="Edit"
             >
               <SquarePen className="text-black dark:text-white" />
-            </button>
-            <button
-              className="text-destructive hover:text-destructive/80 cursor-pointer"
-              title="Delete"
-            >
-              <Trash2 />
-            </button>
+            </Link>
+            <DeleteAlert product={product} />
           </td>
         </tr>
       ))}

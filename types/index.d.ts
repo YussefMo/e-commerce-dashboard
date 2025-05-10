@@ -24,6 +24,7 @@ interface AddProductProp {
     type: string;
     options: string[];
   }>;
+  imageFiles?: File[];
 }
 
 interface Products {

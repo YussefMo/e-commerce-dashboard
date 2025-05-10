@@ -1,6 +1,6 @@
 'use client';
 
-import { uploadImages } from '@/cloudinary/cloudinary';
+import { replaceImages } from '@/cloudinary/cloudinary';
 import DragAndDropInput from '@/components/DragAndDropInput';
 import { Dropdown } from '@/components/Dropdown';
 import FormFieldComp from '@/components/FormField';
@@ -8,21 +8,25 @@ import { InputArray } from '@/components/InputArray';
 import ProductVarieties from '@/components/ProductVarieties';
 import { Button } from '@/components/UI/button';
 import { Form } from '@/components/UI/form';
-import { addProduct } from '@/lib/action/product.action';
+import { getProductById, updateProduct } from '@/lib/action/product.action';
 import { usePageContext } from '@/lib/PageContextProvider';
 import {
-  addProductFormSchema,
-  AddProductFormValues
+  UpdateProductFormValues,
+  updateProductFormSchema
 } from '@/lib/schemas/product-schema';
 import { handleAddFile, handleRemoveFile } from '@/lib/utils/form-helpers';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function Page() {
-  const form = useForm<AddProductFormValues>({
-    resolver: zodResolver(addProductFormSchema),
+  const params = useParams();
+  const productId = params.id as string;
+
+  const form = useForm<UpdateProductFormValues>({
+    resolver: zodResolver(updateProductFormSchema),
     defaultValues: {
       productName: '',
       category: '',
@@ -37,32 +41,94 @@ export default function Page() {
   });
 
   const [submitting, setSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { setPageContextData } = usePageContext();
 
-  const onSubmit = async (data: AddProductFormValues) => {
+  useEffect(() => {
+    if (productId) {
+      const fetchProduct = async () => {
+        setIsLoading(true);
+        try {
+          const product = await getProductById(productId);
+          if (product) {
+            form.reset({
+              productName: product.productName,
+              category: product.category,
+              price: product.price,
+              stock: product.stock,
+              discount: product.discount,
+              description: product.description,
+              tags: product.tags || [],
+              variety: product.variety || [],
+              imageFiles: [],
+              imageUrls: product.imageUrls || []
+            });
+          } else {
+            toast.error('Product not found.');
+          }
+        } catch (error) {
+          console.error('Failed to fetch product:', error);
+          toast.error('Failed to load product details.');
+        }
+        setIsLoading(false);
+      };
+      fetchProduct();
+    }
+  }, [productId, form]);
+
+  const onSubmit = async (data: UpdateProductFormValues) => {
     setSubmitting(true);
     try {
-      const uploadedImageUrls = await uploadImages(data.imageFiles);
-      const productDataToSave: AddProductProp = {
+      const existingImageUrls: string[] = form.getValues().imageUrls || [];
+      let finalImageUrls: string[] = existingImageUrls; // Initialize with existing URLs
+
+      if (data.imageFiles && data.imageFiles.length > 0) {
+        // If new files are provided, delete old (if any) and upload new ones
+        toast.info('Replacing images... This may take a moment.');
+        finalImageUrls = await replaceImages(
+          existingImageUrls,
+          data.imageFiles
+        );
+      }
+      // If no new files, finalImageUrls remains as existingImageUrls
+
+      const productDataToUpdate: Partial<AddProductProp> = {
         ...data,
-        imageUrls: uploadedImageUrls,
-        // @ts-ignore
-        imageFiles: undefined
+        imageUrls: finalImageUrls, // Use the determined final URLs
+        imageFiles: undefined // Ensure imageFiles is not sent to Firestore
       };
       // @ts-ignore
-      delete productDataToSave.imageFiles;
+      delete productDataToUpdate.imageFiles;
 
-      const result = await addProduct(productDataToSave);
+      const result = await updateProduct(productId, productDataToUpdate);
 
       if (result.success) {
-        toast.success(result.message);
-        form.reset();
+        toast.success(result.message || 'Product updated successfully!');
+        // Optionally, refetch data or reset form with updated values
+        const updatedProduct = await getProductById(productId);
+        if (updatedProduct) {
+          form.reset({
+            productName: updatedProduct.productName,
+            category: updatedProduct.category,
+            price: updatedProduct.price,
+            stock: updatedProduct.stock,
+            discount: updatedProduct.discount,
+            description: updatedProduct.description,
+            tags: updatedProduct.tags || [],
+            variety: updatedProduct.variety || [],
+            imageFiles: [],
+            // @ts-ignore
+            imageUrls: updatedProduct.imageUrls || []
+          });
+        }
       } else {
         toast.error(result.message || 'An unknown error occurred.');
       }
     } catch (error: any) {
-      console.error('Error submitting product:', error);
-      toast.error(error.message || 'Failed to add product. Please try again.');
+      console.error('Error updating product:', error);
+      toast.error(
+        error.message || 'Failed to update product. Please try again.'
+      );
     }
     setSubmitting(false);
   };
@@ -70,16 +136,26 @@ export default function Page() {
   const watchedValues = form.watch();
 
   useEffect(() => {
-    setPageContextData({ pageName: 'add-product', watchedValues });
-  }, [JSON.stringify(watchedValues), setPageContextData]);
+    if (!isLoading && form.getValues().productName) {
+      setPageContextData({ pageName: 'edit-product', data: watchedValues });
+    }
+  }, [JSON.stringify(watchedValues), setPageContextData, isLoading, form]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        Loading product details...
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background text-foreground min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="bg-card mx-auto max-w-4xl rounded-2xl p-6 shadow-xl sm:p-8 lg:p-10">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold sm:text-4xl">Add New Product</h1>
+          <h1 className="text-3xl font-bold sm:text-4xl">Edit Product</h1>
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">
-            Fill in the details below to add a new product to your catalog.
+            Update the details of your product below.
           </p>
         </div>
         <Form {...form}>
@@ -149,13 +225,14 @@ export default function Page() {
               name="tags"
             />
 
-            <ProductVarieties form={form} control={form.control} />
+            {/* @ts-ignore */}
+            <ProductVarieties form={form as any} control={form.control} />
 
             <DragAndDropInput
-              form={form}
+              form={form as any}
               name="imageFiles"
-              label="Product Images (max 5 images, 5MB per image)"
-              values={form.watch('imageFiles') || []}
+              label="Product Images (max 5 images, 5MB per image) - Add new or replace existing"
+              values={form.watch('imageFiles')}
               onAdd={(file) => handleAddFile(form, file)}
               onRemove={(index) => handleRemoveFile(form, index)}
             />
@@ -163,9 +240,9 @@ export default function Page() {
             <Button
               type="submit"
               className="bg-icon hover:bg-icon/90 text-primary-foreground w-full cursor-pointer rounded-lg py-3 font-semibold transition-colors duration-300 ease-in-out disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={submitting}
+              disabled={submitting || isLoading}
             >
-              {submitting ? 'Creating Product...' : 'Create Product'}
+              {submitting ? 'Updating Product...' : 'Update Product'}
             </Button>
           </form>
         </Form>

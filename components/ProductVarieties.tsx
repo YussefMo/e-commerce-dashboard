@@ -3,7 +3,7 @@
 import { InputArray } from '@/components/InputArray';
 import { Button } from '@/components/UI/button';
 import { Input } from '@/components/UI/input';
-import { AddProductFormValues } from '@/lib/schemas/add-product-schema';
+import { AddProductFormValues } from '@/lib/schemas/product-schema';
 import { useState } from 'react';
 import { Control, useFieldArray, UseFormReturn } from 'react-hook-form';
 
