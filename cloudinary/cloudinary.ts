@@ -14,10 +14,9 @@ cloudinary.config({
   secure: true
 });
 
-const user = await getCurrentUser();
-const isAdmin = user?.role === 'admin';
-
 export async function uploadImage(file: File): Promise<string> {
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === 'admin';
   if (!isAdmin) {
     throw new Error('Unauthorized');
   }
@@ -53,6 +52,8 @@ export async function uploadImage(file: File): Promise<string> {
 }
 
 export async function uploadImages(files: File[]): Promise<string[]> {
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === 'admin';
   if (!isAdmin) {
     throw new Error('Unauthorized');
   }
@@ -74,9 +75,6 @@ export async function uploadImages(files: File[]): Promise<string[]> {
 
 // Helper function to extract public ID from Cloudinary URL
 function getPublicIdFromUrl(imageUrl: string): string | null {
-  if (!isAdmin) {
-    throw new Error('Unauthorized');
-  }
   try {
     const urlParts = imageUrl.split('/');
     const publicIdWithFormat = urlParts
@@ -106,6 +104,8 @@ function getPublicIdFromUrl(imageUrl: string): string | null {
 }
 
 export async function deleteImageByPublicId(publicId: string): Promise<void> {
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === 'admin';
   if (!isAdmin) {
     throw new Error('Unauthorized');
   }
@@ -141,6 +141,8 @@ export async function deleteImageByPublicId(publicId: string): Promise<void> {
 }
 
 export async function deleteImagesByUrls(imageUrls: string[]): Promise<void> {
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === 'admin';
   if (!isAdmin) {
     throw new Error('Unauthorized');
   }
@@ -177,6 +179,8 @@ export async function replaceImages(
   existingImageUrls: string[],
   newImageFiles: File[]
 ): Promise<string[]> {
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === 'admin';
   if (!isAdmin) {
     throw new Error('Unauthorized');
   }
