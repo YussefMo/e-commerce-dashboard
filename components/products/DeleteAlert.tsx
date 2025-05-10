@@ -60,13 +60,15 @@ function DeleteAlert({ product }: DeleteAlert) {
                 if (productToDelete) {
                   toast.info('deleting in progress');
                   try {
-                    await deleteProduct(
+                    const res = await deleteProduct(
                       productToDelete.id,
                       productToDelete.imageUrls
                     );
-                    toast.success(
-                      `Product "${productToDelete.productName}" deleted successfully.`
-                    );
+                    if (res.success) {
+                      toast.success(res.message);
+                    } else {
+                      toast.error(res.message);
+                    }
                   } catch (error) {
                     console.error('Failed to delete product:', error);
                     toast.error(

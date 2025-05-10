@@ -29,7 +29,7 @@ export async function addProduct(data: AddProductProp) {
   } else {
     return {
       success: false,
-      message: 'you are not an admin'
+      message: 'You are not an admin or not authorized to add products.'
     };
   }
 }
