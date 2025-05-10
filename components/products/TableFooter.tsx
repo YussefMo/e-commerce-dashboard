@@ -13,10 +13,13 @@ interface TableFooterProps {
 function TableFooter({ currentPage, totalPages }: TableFooterProps) {
   const router = useRouter();
 
-  // Prefetch the next page when component mounts or currentPage changes
+  // Prefetch the next and prev page when component mounts or currentPage changes
   useEffect(() => {
     if (currentPage < totalPages) {
       router.prefetch(`?page=${currentPage + 1}`);
+    }
+
+    if (currentPage > 1) {
       router.prefetch(`?page=${currentPage - 1}`);
     }
   }, [currentPage, totalPages, router]);
