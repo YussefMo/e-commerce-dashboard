@@ -17,6 +17,7 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
   useEffect(() => {
     if (currentPage < totalPages) {
       router.prefetch(`?page=${currentPage + 1}`);
+      router.prefetch(`?page=${currentPage - 1}`);
     }
   }, [currentPage, totalPages, router]);
 
