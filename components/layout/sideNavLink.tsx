@@ -6,8 +6,7 @@ function SideNavLink({
   href = '/',
   type = 'link',
   onClick,
-  active = false,
-  prefetch = false
+  active = false
 }: {
   icon: React.ReactNode;
   title: string;
@@ -15,14 +14,12 @@ function SideNavLink({
   type?: 'link' | 'button';
   onClick?: () => void;
   active?: boolean;
-  prefetch?: boolean;
 }) {
   if (type === 'link') {
     return (
       <Link
         href={href}
         className={`flex w-full flex-row py-1 ${active ? 'border-icon border-r-7' : ''}`}
-        prefetch={prefetch}
       >
         {icon} <p className="ml-3 font-medium">{title}</p>
       </Link>

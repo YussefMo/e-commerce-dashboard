@@ -3,7 +3,7 @@ export function ProductsTableSkeleton() {
     <div className="w-full space-y-4">
       <div className="rounded-md border">
         <div className="divide-y">
-          {[...Array(10)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <div
               key={i}
               className="grid animate-pulse grid-cols-4 items-center gap-4 p-4"

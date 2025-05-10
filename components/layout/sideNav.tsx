@@ -38,7 +38,6 @@ function SideNav({ children }: { children: React.ReactNode }) {
                 className={pathName === '/products' ? 'text-icon' : ''}
               />
             }
-            prefetch={true}
             title="Products"
             active={pathName === '/products'}
           />
