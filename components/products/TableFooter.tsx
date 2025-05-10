@@ -1,12 +1,5 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from '@/components/UI/pagination';
+import Link from 'next/link';
+import clsx from 'clsx';
 
 interface TableFooterProps {
   currentPage: number;
@@ -14,16 +7,13 @@ interface TableFooterProps {
 }
 
 function TableFooter({ currentPage, totalPages }: TableFooterProps) {
-  const getPageNumbers = () => {
-    const pages = [];
-
-    pages.push(1);
+  const getPageNumbers = (): (number | string)[] => {
+    const pages: (number | string)[] = [1];
 
     if (currentPage > 3) {
       pages.push('...');
     }
 
-    // Show pages around current page
     const start = Math.max(2, currentPage - 1);
     const end = Math.min(totalPages - 1, currentPage + 1);
 
@@ -33,12 +23,10 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
       }
     }
 
-    // Show ellipsis if current page is far from end
     if (currentPage < totalPages - 2) {
       pages.push('...');
     }
 
-    // Always show last page if different from first
     if (totalPages > 1) {
       pages.push(totalPages);
     }
@@ -46,41 +34,51 @@ function TableFooter({ currentPage, totalPages }: TableFooterProps) {
     return pages;
   };
 
+  const linkClass = (active: boolean) =>
+    clsx(
+      'px-3 py-1 rounded-md border text-sm',
+      active
+        ? 'bg-icon text-white border-primary'
+        : 'hover:bg-muted border-input text-muted-foreground'
+    );
+
   return (
-    <Pagination className="mt-6 border-t pt-4">
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            href={currentPage > 1 ? `?page=${currentPage - 1}` : undefined}
-            isActive={currentPage !== 1}
-          />
-        </PaginationItem>
+    <div className="mt-6 flex justify-center border-t pt-4">
+      <nav className="flex items-center gap-3">
+        <Link
+          href={currentPage > 1 ? `?page=${currentPage - 1}` : '#'}
+          className={linkClass(currentPage !== 1)}
+          aria-disabled={currentPage === 1}
+        >
+          Previous
+        </Link>
 
-        {getPageNumbers().map((page, index) => (
-          <PaginationItem key={index}>
-            {page === '...' ? (
-              <PaginationEllipsis />
-            ) : (
-              <PaginationLink
-                href={`?page=${page}`}
-                isActive={currentPage === page}
-              >
-                {page}
-              </PaginationLink>
-            )}
-          </PaginationItem>
-        ))}
+        <div className='flex gap-1'>
+          {getPageNumbers().map((page, index) => (
+            <span key={index}>
+              {page === '...' ? (
+                <span className="text-muted-foreground px-2">...</span>
+              ) : (
+                <Link
+                  href={`?page=${page}`}
+                  className={linkClass(currentPage === page)}
+                >
+                  {page}
+                </Link>
+              )}
+            </span>
+          ))}
+        </div>
 
-        <PaginationItem>
-          <PaginationNext
-            href={
-              currentPage < totalPages ? `?page=${currentPage + 1}` : undefined
-            }
-            isActive={currentPage !== totalPages}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+        <Link
+          href={currentPage < totalPages ? `?page=${currentPage + 1}` : '#'}
+          className={linkClass(currentPage !== totalPages)}
+          aria-disabled={currentPage === totalPages}
+        >
+          Next
+        </Link>
+      </nav>
+    </div>
   );
 }
 
