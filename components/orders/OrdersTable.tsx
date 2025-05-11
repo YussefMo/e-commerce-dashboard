@@ -14,7 +14,7 @@ async function OrdersTable({
   const totalPages = response?.totalPages || 1;
 
   return (
-    <div className="bg-card text-foreground rounded-lg p-4 shadow-md sm:p-6">
+    <div className="bg-card text-foreground mt-20 rounded-lg p-4 shadow-md sm:p-6">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <ReceiptText /> Orders List
@@ -24,6 +24,7 @@ async function OrdersTable({
           currentPage: currentPage,
           orders: orders,
           status: status,
+          totalPages: totalPages
         })}
       </div>
 

@@ -1,8 +1,8 @@
 'use client';
 
-import { usePageContext } from '@/lib/PageContextProvider';
+import { FilterIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useState } from 'react';
 
 interface ButtonProps {
   filter: string;
@@ -32,12 +32,11 @@ function Button({
   );
 }
 
-function Filter({ currentPage, orders, status }: FilterProps) {
+function Filter() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
-  // const [isOpen, setIsOpen] = useState(false);
-  const { setPageContextData } = usePageContext();
+  const [isOpen, setIsOpen] = useState(false);
 
   const activeFilter = searchParams.get('status') ?? 'all';
 
@@ -45,22 +44,11 @@ function Filter({ currentPage, orders, status }: FilterProps) {
     const params = new URLSearchParams();
     params.set('status', filter);
     router.replace(`${pathName}?${params.toString()}`, { scroll: false });
-    // setIsOpen(false);
+    setIsOpen(false);
   }
 
-  useEffect(() => {
-    setPageContextData({
-      pageName: 'Orders',
-      ordersData: orders,
-      currentPageOfPagination: currentPage,
-      filteredBasedOnStatus: status,
-      description:
-        'this page is about the orders the customers has placed use the provided data to answer the user questions and for the filteredBasedOnStatus if its undefined that mean there is no filter appalled and for the used data in the table is customers names and the length of the ordered items order status totalAmount createdAt date and an action for viewing more information of the order'
-    });
-  }, [currentPage, orders, setPageContextData, status]);
-
   return (
-    <div className="relative">
+    <div className="bg-card absolute right-5 w-fit rounded-lg">
       {/* large screens - regular filter */}
       <div className="hidden w-full flex-wrap justify-center gap-2 rounded-md p-2 lg:flex">
         <Button
@@ -100,14 +88,14 @@ function Filter({ currentPage, orders, status }: FilterProps) {
         </Button>
       </div>
 
-      {/* small screens - filter icon with dropdown
+      {/* small screens - filter icon with dropdown */}
       <div className="w-full lg:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 p-3 text-white transition-all hover:opacity-90"
+          className="rounded-full bg-icon p-3 text-white transition-all hover:opacity-90"
           aria-label="Filter projects"
         >
-          <FiFilter className="h-5 w-5" />
+          <FilterIcon className="h-5 w-5" />
         </button>
 
         {isOpen && (
@@ -149,7 +137,7 @@ function Filter({ currentPage, orders, status }: FilterProps) {
             </Button>
           </div>
         )}
-      </div> */}
+      </div>
     </div>
   );
 }

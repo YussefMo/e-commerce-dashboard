@@ -1,6 +1,9 @@
 export function ProductsTableSkeleton() {
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4 mt-20">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="h-8 w-1/4 rounded bg-gray-200 dark:bg-gray-700"></div>
+      </div>
       <div className="rounded-md border">
         <div className="divide-y">
           {[...Array(5)].map((_, i) => (
@@ -15,6 +18,9 @@ export function ProductsTableSkeleton() {
             </div>
           ))}
         </div>
+      </div>
+      <div className="mt-4 flex items-center justify-center">
+        <div className="h-8 w-1/4 rounded bg-gray-200 dark:bg-gray-700"></div>
       </div>
     </div>
   );

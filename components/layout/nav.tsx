@@ -1,16 +1,12 @@
-import { Bell, CirclePlus, Mail, Search } from 'lucide-react';
-import ThemeToggle from '../UI/themeToggle';
+import { Bell, CirclePlus, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import ThemeToggle from '../UI/themeToggle';
 
 function Nav() {
   return (
     <header className="bg-sidebar-primary-foreground fixed top-0 right-0 left-67 flex items-center justify-between max-lg:left-0">
       <div className="px-3 py-4">
-        <form className="bg-primary flex items-center gap-2 rounded-sm border px-3 py-2">
-          <Search className="text-icon" />
-          <input type="text" placeholder="Search Here" />
-        </form>
       </div>
       <div className="flex items-center gap-3">
         <ThemeToggle />

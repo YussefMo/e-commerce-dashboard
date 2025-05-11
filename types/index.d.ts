@@ -84,9 +84,10 @@ interface TableBodyProps {
 }
 
 interface SearchInputProps {
-  defaultValue: string | undefined;
-  currentPage: number;
-  products: Product[];
+  defaultValue?: string | undefined;
+  currentPage?: number;
+  products?: Product[];
+  totalPages?: number;
 }
 
 interface OrdersTableProps {
@@ -141,4 +142,5 @@ interface FilterProps {
   status?: string | undefined;
   currentPage?: number;
   orders?: Orders[];
+  totalPages?: number;
 }
