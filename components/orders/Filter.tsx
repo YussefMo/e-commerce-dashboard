@@ -90,13 +90,15 @@ function Filter() {
 
       {/* small screens - filter icon with dropdown */}
       <div className="w-full lg:hidden">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="rounded-full bg-icon p-3 text-white transition-all hover:opacity-90"
-          aria-label="Filter projects"
-        >
-          <FilterIcon className="h-5 w-5" />
-        </button>
+        <div className='flex justify-end'>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-icon rounded-full p-3 text-right text-white transition-all hover:opacity-90"
+            aria-label="Filter projects"
+          >
+            <FilterIcon className="h-5 w-5" />
+          </button>
+        </div>
 
         {isOpen && (
           <div className="flex flex-col gap-2">
@@ -105,35 +107,35 @@ function Filter() {
               activeFilter={activeFilter}
               filterHandler={filterHandler}
             >
-              All projects
+              All
             </Button>
             <Button
-              filter="vanilla"
+              filter="pending"
               activeFilter={activeFilter}
               filterHandler={filterHandler}
             >
-              Vanilla Projects
+              Pending
             </Button>
             <Button
-              filter="react"
+              filter="processing"
               activeFilter={activeFilter}
               filterHandler={filterHandler}
             >
-              React Projects
+              Processing
             </Button>
             <Button
-              filter="next"
+              filter="shipped"
               activeFilter={activeFilter}
               filterHandler={filterHandler}
             >
-              next Projects
+              Shipped
             </Button>
             <Button
-              filter="full-system"
+              filter="delivered"
               activeFilter={activeFilter}
               filterHandler={filterHandler}
             >
-              Full system Projects
+              Delivered
             </Button>
           </div>
         )}
