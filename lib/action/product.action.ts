@@ -14,6 +14,7 @@ export async function addProduct(data: AddProductProp) {
         ...data,
         createdAt: new Date()
       });
+      revalidatePath('/products');
       return {
         success: true,
         message: 'product added successfully'
@@ -121,6 +122,7 @@ export async function updateProduct(
         .update({
           ...updateData
         });
+      revalidatePath('/products');
       return {
         success: true,
         message: 'Product updated successfully'
