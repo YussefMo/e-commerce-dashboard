@@ -100,18 +100,38 @@ function Page() {
       <div className="p-6 sm:p-8 lg:p-10">
         <div>
           <h2 className="text-lg font-semibold">Order Related Dates</h2>
-          <p>{`Order Placed At: ${formatDate(data.createdAt)}`}</p>
-          <p>{`Order Updated At: ${formatDate(data.updatedAt)}`}</p>
-          <p>{`Order Shipped At: ${formatDate(data.shippedAt)}`}</p>
-          <p>{`Order Delivered At: ${formatDate(data.deliveredAt)}`}</p>
+          <p>
+            <span className="font-semibold">Order Placed At:</span>{' '}
+            {formatDate(data.createdAt)}
+          </p>
+          <p>
+            <span className="font-semibold">Order Updated At:</span>{' '}
+            {formatDate(data.updatedAt)}
+          </p>
+          <p>
+            <span className="font-semibold">Order Shipped At:</span>{' '}
+            {formatDate(data.shippedAt)}
+          </p>
+          <p>
+            <span className="font-semibold">Order Delivered At:</span>{' '}
+            {formatDate(data.deliveredAt)}
+          </p>
         </div>
         <hr className="mt-5" />
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <h2 className="text-lg font-semibold">User Information</h2>
-            <p>Name: {data.shippingAddress.name}</p>
-            <p>Phone: {data.shippingAddress.phone}</p>
-            <p>Email: {user?.email}</p>
+            <p>
+              <span className="font-semibold">Name:</span>{' '}
+              {data.shippingAddress.name}
+            </p>
+            <p>
+              <span className="font-semibold">Phone:</span>{' '}
+              {data.shippingAddress.phone}
+            </p>
+            <p>
+              <span className="font-semibold">Email:</span> {user?.email}
+            </p>
           </div>
           <div>
             <h2 className="text-lg font-semibold">Shipping Address</h2>
@@ -121,11 +141,6 @@ function Page() {
               {data.shippingAddress.zipCode}
             </p>
             <p>{data.shippingAddress.country}</p>
-            <p
-              className={`inline-flex rounded-full px-2 text-xs leading-5 font-semibold ${data.status === 'pending' ? 'bg-red-100 text-red-800' : data.status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}
-            >
-              status {data.status}
-            </p>
           </div>
         </div>
         <hr className="mt-5" />
@@ -136,18 +151,37 @@ function Page() {
         <hr className="mt-5" />
         <div className="mt-6">
           <h2 className="text-lg font-semibold">Payment Details</h2>
-          <p>Subtotal: ${data.subtotal}</p>
-          <p>Tax: ${data.taxAmount}</p>
-          <p>Shipping: ${data.shippingCost}</p>
-          <p>Total: ${data.totalAmount}</p>
-          <p>Payment Method: {data.paymentMethod}</p>
+          <p>
+            <span className="font-semibold">Subtotal:</span> ${data.subtotal}
+          </p>
+          <p>
+            <span className="font-semibold">Tax:</span> ${data.taxAmount}
+          </p>
+          <p>
+            <span className="font-semibold">Shipping:</span> $
+            {data.shippingCost}
+          </p>
+          <p>
+            <span className="font-semibold">Total:</span> ${data.totalAmount}
+          </p>
+          <p>
+            <span className="font-semibold">Payment Method:</span>{' '}
+            {data.paymentMethod}
+          </p>
         </div>
         <hr className="mt-5" />
         <div className="mt-6">
           <h2 className="text-lg font-semibold">Order Status</h2>
-          <p>Status: {data.status}</p>
-          <p>Tracking Number: {data.trackingNumber}</p>
-          <p>Notes: {data.notes}</p>
+          <p>
+            <span className="font-semibold">Status:</span>{' '}
+            <span
+              className={`inline-flex rounded-full px-2 text-xs leading-5 font-semibold ${data.status === 'pending' ? 'bg-red-100 text-red-800' : data.status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}
+            >
+              {data.status}
+            </span>
+          </p>
+          <p><span className="font-semibold">Tracking Number:</span> {data.trackingNumber}</p>
+          <p><span className="font-semibold">Notes:</span> {data.notes}</p>
         </div>
       </div>
     </div>
