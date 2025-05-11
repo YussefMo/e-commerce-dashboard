@@ -12,7 +12,7 @@ function AiChatToggler() {
   }
 
   return (
-    <div className="fixed right-0 bottom-0 mr-5 flex flex-col justify-end">
+    <div className="fixed right-0 bottom-0 mr-5 flex flex-col justify-end z-1000">
       {isOpen ? (
         <>
           <AiChat />

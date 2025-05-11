@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from '@/firebase/admin';
 import { PAGINATION_PER_PAGE } from '../utils';
 
@@ -40,4 +42,21 @@ export async function getAllOrdersWithAction(
     orders,
     totalPages
   };
+}
+
+export async function getOrderById(orderId: string): Promise<Orders | null> {
+  const order = await db.collection('orders').doc(orderId).get();
+
+  if (!order.exists) {
+    return null;
+  }
+
+  return {
+    id: order.id,
+    ...order.data(),
+    createdAt: order.data()?.createdAt?.toDate().toISOString(),
+    updatedAt: order.data()?.updatedAt?.toDate().toISOString(),
+    shippedAt: order.data()?.shippedAt?.toDate().toISOString(),
+    deliveredAt: order.data()?.deliveredAt?.toDate().toISOString()
+  } as Orders;
 }

@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,33 +12,6 @@ function TableBody({ orders }: TableBodyProps) {
       <div className="p-4 text-center text-gray-500">No orders found.</div>
     );
   }
-
-  const formatDate = (
-    dateValue: string | { seconds: number; nanoseconds: number } | null
-  ) => {
-    if (typeof dateValue === 'string') {
-      try {
-        const date = new Date(dateValue);
-        return date.toLocaleDateString('en-US', {
-          year: '2-digit',
-          month: '2-digit',
-          day: '2-digit'
-        });
-        // eslint-disable-next-line no-unused-vars
-      } catch (e) {
-        return 'N/A';
-      }
-    }
-    if (dateValue && typeof dateValue.seconds === 'number') {
-      const date = new Date(dateValue.seconds * 1000);
-      return date.toLocaleDateString('en-US', {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit'
-      });
-    }
-    return 'N/A';
-  };
 
   return (
     <tbody className="bg-card divide-border divide-y">
@@ -65,7 +39,7 @@ function TableBody({ orders }: TableBodyProps) {
           <td className="flex items-center px-6 py-6 text-sm font-medium whitespace-nowrap">
             <Link
               href={`/orders/${order.id}`}
-              className="flex bg-icon text-primary cursor-pointer items-center rounded-lg p-2"
+              className="bg-icon text-primary flex cursor-pointer items-center rounded-lg p-2"
               title="Edit"
             >
               more info <ChevronRight />

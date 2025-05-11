@@ -41,7 +41,7 @@ interface Products {
     type: string;
     options: string[];
   }>;
-  createdAt: string | { seconds: number; nanoseconds: number };
+  createdAt: string | { seconds: number; nanoseconds: number } | null;
   map(arg0: (product: any) => React.JSX.Element): React.ReactNode;
 }
 
@@ -99,7 +99,6 @@ interface OrdersTableProps {
 interface Orders {
   id: string;
   userId: string;
-  userName: string;
   items: Array<{
     productId: string;
     productName: string;
@@ -107,6 +106,7 @@ interface Orders {
     quantity: number;
     subtotal: number;
     imageUrl: string;
+    map(arg0: (item: any) => React.JSX.Element): React.ReactNode;
   }>;
   subtotal: number;
   taxAmount: number;
@@ -143,4 +143,14 @@ interface FilterProps {
   currentPage?: number;
   orders?: Orders[];
   totalPages?: number;
+}
+
+interface OrderItems {
+  productId: string;
+  productName: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+  imageUrl: string;
+  map(arg0: (item: any) => React.JSX.Element): React.ReactNode;
 }

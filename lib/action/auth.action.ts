@@ -95,3 +95,14 @@ export async function signOut() {
   const cookieStore = await cookies();
   cookieStore.delete('session');
 }
+
+export async function getUserById(id: string) {
+  const userRef = db.collection('users').doc(id);
+  const userSnapshot = await userRef.get();
+
+  if (userSnapshot.exists) {
+    return userSnapshot.data() as User;
+  } else {
+    return null;
+  }
+}

@@ -43,8 +43,6 @@ function AiChat() {
             role: 'assistant',
             content:
               'Hello! How can I help you today?\n\n' +
-              'Currently accessible pages for the AI:  \n\n' +
-              '- Add product page\n\n' +
               '- Usage instruction\n\n' +
               'Type / to see available tools.\n\n'
           }
