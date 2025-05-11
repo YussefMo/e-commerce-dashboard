@@ -8,7 +8,7 @@ async function Page({ searchParams }: searchParamsOrders) {
   const currentPage = Number(page ?? '1');
 
   return (
-    <Suspense fallback={<ProductsTableSkeleton />}>
+    <Suspense fallback={<ProductsTableSkeleton />} key={status}>
       <OrdersTable currentPage={currentPage} status={status}>
         <Filter />
       </OrdersTable>

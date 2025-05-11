@@ -8,7 +8,7 @@ async function Page({ searchParams }: searchParamsPagination) {
   const currentPage = Number(page ?? '1');
 
   return (
-    <Suspense fallback={<ProductsTableSkeleton />}>
+    <Suspense fallback={<ProductsTableSkeleton />} key={search}>
       <ProductsTable currentPage={currentPage} search={search}>
         <SearchInput
           defaultValue={search}

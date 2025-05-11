@@ -138,7 +138,7 @@ interface searchParamsOrders {
 }
 
 interface FilterProps {
-  status: string | undefined;
-  currentPage: number;
-  orders: Orders[];
+  status?: string | undefined;
+  currentPage?: number;
+  orders?: Orders[];
 }
