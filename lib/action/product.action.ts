@@ -1,6 +1,6 @@
 'use server';
 
-import { PRODUCTS_PER_PAGE } from '../utils';
+import { PAGINATION_PER_PAGE } from '../utils';
 import { db } from '@/firebase/admin';
 import { getCurrentUser } from './auth.action';
 import { deleteImagesByUrls } from '@/cloudinary/cloudinary';
@@ -49,13 +49,13 @@ export async function getAllProductsWithAction(
 
   const snapshot = await productsRef.count().get();
   const totalProducts = snapshot.data().count;
-  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+  const totalPages = Math.ceil(totalProducts / PAGINATION_PER_PAGE);
 
-  const offset = (page - 1) * PRODUCTS_PER_PAGE;
+  const offset = (page - 1) * PAGINATION_PER_PAGE;
 
   const productsQuery = await productsRef
     .orderBy('createdAt', 'desc')
-    .limit(PRODUCTS_PER_PAGE)
+    .limit(PAGINATION_PER_PAGE)
     .offset(offset)
     .get();
 

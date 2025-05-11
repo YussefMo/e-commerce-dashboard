@@ -75,8 +75,8 @@ interface searchParamsPagination {
 
 interface ProductsTableProps {
   currentPage: number;
-  children: React.ReactNode
-  search: string | undefined
+  children: React.ReactNode;
+  search: string | undefined;
 }
 
 interface TableBodyProps {
@@ -84,7 +84,61 @@ interface TableBodyProps {
 }
 
 interface SearchInputProps {
-  defaultValue: string | undefined
-  currentPage: number
-  products: Product[]
+  defaultValue: string | undefined;
+  currentPage: number;
+  products: Product[];
+}
+
+interface OrdersTableProps {
+  currentPage: number;
+  children: React.ReactNode;
+  status: string | undefined;
+}
+
+interface Orders {
+  id: string;
+  userId: string;
+  userName: string;
+  items: Array<{
+    productId: string;
+    productName: string;
+    price: number;
+    quantity: number;
+    subtotal: number;
+    imageUrl: string;
+  }>;
+  subtotal: number;
+  taxAmount: number;
+  shippingCost: number;
+  totalAmount: number;
+  status: string;
+  shippingAddress: {
+    name: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+    phone: string;
+  };
+  paymentMethod: string;
+  createdAt: string | { seconds: number; nanoseconds: number } | null;
+  updatedAt: string | { seconds: number; nanoseconds: number } | null;
+  shippedAt: string | { seconds: number; nanoseconds: number } | null;
+  deliveredAt: string | { seconds: number; nanoseconds: number } | null;
+  trackingNumber: string;
+  notes: string | null;
+}
+
+interface searchParamsOrders {
+  searchParams: {
+    page?: string;
+    status?: string;
+  };
+}
+
+interface FilterProps {
+  status: string | undefined;
+  currentPage: number;
+  orders: Orders[];
 }
