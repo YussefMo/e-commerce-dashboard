@@ -28,8 +28,8 @@ async function OrdersTable({
         })}
       </div>
 
-      <div className="overflow-x-auto md:overflow-x-auto">
-        <table className="divide-border min-w-full divide-y max-md:max-w-fit">
+      <div className="border-border overflow-y-auto rounded-md border">
+        <table className="divide-border min-w-full divide-y">
           <TableBody orders={orders} />
         </table>
       </div>
