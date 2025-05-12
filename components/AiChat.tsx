@@ -5,13 +5,14 @@ import ReactMarkdown from 'react-markdown';
 import { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { Button } from './UI/button';
 import { usePageContext } from '@/lib/PageContextProvider';
+import { Globe } from 'lucide-react';
 
 const SESSION_STORAGE_KEY = 'chatMessages';
 const AVAILABLE_TOOLS = [
   '/getProductDetails',
   '/deleteProduct',
   '/analyzeProduct',
-  '/dataAnalysis',
+  '/dataAnalysis'
 ];
 
 interface Message {
@@ -26,6 +27,7 @@ function AiChat() {
   const [initialMessages, setInitialMessages] = useState<Message[] | undefined>(
     undefined
   );
+  const [search, setSearch] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { pageContextData } = usePageContext(); // Get the context data
@@ -67,8 +69,9 @@ function AiChat() {
     initialMessages: initialMessages as
       | import('@ai-sdk/ui-utils').Message[]
       | undefined,
-    // Pass a function to body to get the latest context on each request
+    // Pass a function to body to get the latest context on each request and search state
     body: {
+      search,
       get pageContext() {
         return pageContextData;
       }
@@ -187,6 +190,12 @@ function AiChat() {
             Send
           </Button>
         </div>
+        <button
+          className={`hover:bg-icon mt-2 cursor-pointer rounded-md p-1 ${search && 'bg-icon text-white'}`}
+          onClick={() => setSearch(!search)}
+        >
+          <Globe />
+        </button>
       </form>
     </div>
   );
