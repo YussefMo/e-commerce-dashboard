@@ -5,7 +5,7 @@ import ThemeToggle from '../UI/themeToggle';
 
 function Nav() {
   return (
-    <header className="bg-sidebar-primary-foreground fixed top-0 right-0 left-67 z-80 flex items-center justify-between border border-b-2 max-lg:left-0">
+    <header className="bg-sidebar-primary-foreground fixed top-0 right-0 left-67 z-80 flex items-center justify-between border-b-2 max-lg:left-0">
       <div className="px-3 py-4"></div>
       <div className="flex items-center gap-3">
         <ThemeToggle />

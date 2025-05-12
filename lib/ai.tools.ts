@@ -134,7 +134,7 @@ export const analyzeProductTool = tool({
 
 export const dataAnalysisTool = tool({
   description:
-    'based on all the data passed to you users, products and orders you will preform som data analysis and provide a summary of it, what is the most selling product, name the most buying costumer and etc you have the freedom to do what is necessary for this data and provide points for improvements',
+    'based on all the data passed to you users, products and orders you will preform som data analysis and provide a summary of it, what is the most selling product, name the most buying costumer and etc you have the freedom to do what is necessary for this data and provide points for improvements and you can search the web to improve your result and make sure to add the sources you used for search in the end you can search for some ting like improving sales etc you have your freedom to decide',
   parameters: z.object({
     data: z
       .string()

@@ -21,7 +21,9 @@ export async function POST(req: Request) {
       analyzeProduct: analyzeProductTool,
       dataAnalysis: dataAnalysisTool
     },
-    model: google('gemini-2.0-flash-001'),
+    model: google('gemini-2.0-flash-001', {
+      useSearchGrounding: true
+    }),
     system:
       `${
         formattedPageContext
@@ -30,7 +32,7 @@ export async function POST(req: Request) {
           : `TASK: You are a helpful e-commerce assistant for the admin dashboard.\n          You have access to tools like 'getProductDetails'. ALWAYS consider using your tools to answer user queries, especially for product information or other e-commerce tasks. If a query can be addressed by a tool, prioritize using it, particularly when page context is not available.`
       }\n\nRULES:\n` +
       '- Reply in the same language as the user.\n' +
-      '- If the request is unrelated to e-commerce, respond with: "I am not able to help you with that."\n' +
+      '- If the request is unrelated to e-commerce, respond with: "I am not able to help you with that."\n- If the request is related to web searching about products improvement for e-commerce trends, proceed with the search and provide the necessary information.\n' +
       '- Provide concise, direct answers focusing on the main points.\n' +
       '- Maintain a professional and friendly tone.\n' +
       `- If the request related to adding a new product and the provided context is about the same request, 

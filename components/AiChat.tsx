@@ -72,7 +72,8 @@ function AiChat() {
       get pageContext() {
         return pageContextData;
       }
-    }
+    },
+    maxSteps: 3
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -149,6 +150,21 @@ function AiChat() {
             </div>
           </div>
         ))}
+        {messages[messages.length - 1]?.parts
+          .filter((part) => part.type === 'source')
+          .map((part) => (
+            <span key={`source-${part.source.id}`}>
+              [
+              <a
+                href={part.source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {part.source.title ?? new URL(part.source.url).hostname}
+              </a>
+              ]
+            </span>
+          ))}
       </div>
 
       <form onSubmit={handleSubmit} className="relative border-t p-4">
