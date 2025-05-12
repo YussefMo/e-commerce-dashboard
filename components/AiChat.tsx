@@ -7,7 +7,12 @@ import { Button } from './UI/button';
 import { usePageContext } from '@/lib/PageContextProvider';
 
 const SESSION_STORAGE_KEY = 'chatMessages';
-const AVAILABLE_TOOLS = ['/getProductDetails', '/deleteProduct'];
+const AVAILABLE_TOOLS = [
+  '/getProductDetails',
+  '/deleteProduct',
+  '/analyzeProduct',
+  '/dataAnalysis'
+];
 
 interface Message {
   id: string;
@@ -122,7 +127,7 @@ function AiChat() {
   return (
     <div
       key={initialMessages ? 'loaded' : 'loading'}
-      className="bg-card mb-25 flex h-[600px] w-[400px] flex-col overflow-auto rounded-lg border shadow-2xl dark:shadow-lg dark:shadow-stone-400"
+      className="bg-card mb-25 flex h-[600px] w-[400px] flex-col overflow-auto rounded-lg border shadow-2xl max-sm:w-[300px] dark:shadow-lg dark:shadow-stone-400"
     >
       <div
         ref={messagesEndRef} // Attach the ref to the messages container

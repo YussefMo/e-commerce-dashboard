@@ -1,4 +1,9 @@
-import { deleteProductTool, getProductDetailsTool } from '@/lib/ai.tools';
+import {
+  analyzeProductTool,
+  dataAnalysisTool,
+  deleteProductTool,
+  getProductDetailsTool
+} from '@/lib/ai.tools';
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
@@ -12,7 +17,9 @@ export async function POST(req: Request) {
   const result = streamText({
     tools: {
       getProductDetails: getProductDetailsTool,
-      deleteProduct: deleteProductTool
+      deleteProduct: deleteProductTool,
+      analyzeProduct: analyzeProductTool,
+      dataAnalysis: dataAnalysisTool
     },
     model: google('gemini-2.0-flash-001'),
     system:

@@ -106,3 +106,12 @@ export async function getUserById(id: string) {
     return null;
   }
 }
+
+export async function getAllUsers(): Promise<User[] | null> {
+  const users = await db.collection('users').get();
+
+  return users.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data()
+  })) as User[];
+}

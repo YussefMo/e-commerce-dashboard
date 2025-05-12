@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import { db } from '@/firebase/admin';
 import { PAGINATION_PER_PAGE } from '../utils';
@@ -59,4 +59,13 @@ export async function getOrderById(orderId: string): Promise<Orders | null> {
     shippedAt: order.data()?.shippedAt?.toDate().toISOString(),
     deliveredAt: order.data()?.deliveredAt?.toDate().toISOString()
   } as Orders;
+}
+
+export async function getAllOrders(): Promise<Orders[] | null> {
+  const orders = await db.collection('orders').get();
+
+  return orders.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Orders[];
 }
