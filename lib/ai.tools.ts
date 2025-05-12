@@ -2,8 +2,8 @@ import { db } from '@/firebase/admin';
 import { tool } from 'ai';
 import { z } from 'zod';
 import { getAllUsers, getCurrentUser } from './action/auth.action';
-import { deleteProduct, getAllProducts } from './action/product.action';
 import { getAllOrders } from './action/orders.action';
+import { deleteProduct, getAllProducts } from './action/product.action';
 
 export const getProductDetailsTool = tool({
   description: `Get details for a specific product or a list of products from the Firestore database. 
@@ -134,7 +134,7 @@ export const analyzeProductTool = tool({
 
 export const dataAnalysisTool = tool({
   description:
-    'based on all the data passed to you users, products and orders you will preform som data analysis and provide a summary of it, what is the most selling product, name the most buying costumer and etc you have the freedom to do what is necessary for this data and provide points for improvements and you can search the web to improve your result and make sure to add the sources you used for search in the end you can search for some ting like improving sales etc you have your freedom to decide',
+    'based on all the data passed to you users, products and orders you will preform som data analysis and provide a summary of it, what is the most selling product, name the most buying costumer and etc you have the freedom to do what is necessary for this data and provide points for improvements',
   parameters: z.object({
     data: z
       .string()
@@ -149,7 +149,6 @@ export const dataAnalysisTool = tool({
       const products = getAllProducts();
       const users = getAllUsers();
       const data = await Promise.all([orders, products, users]);
-      console.log(data);
       return JSON.stringify(data);
     } catch (error) {
       console.error('Error fetching product details from Firestore:', error);

@@ -11,7 +11,7 @@ const AVAILABLE_TOOLS = [
   '/getProductDetails',
   '/deleteProduct',
   '/analyzeProduct',
-  '/dataAnalysis'
+  '/dataAnalysis',
 ];
 
 interface Message {
@@ -150,21 +150,6 @@ function AiChat() {
             </div>
           </div>
         ))}
-        {messages[messages.length - 1]?.parts
-          .filter((part) => part.type === 'source')
-          .map((part) => (
-            <span key={`source-${part.source.id}`}>
-              [
-              <a
-                href={part.source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {part.source.title ?? new URL(part.source.url).hostname}
-              </a>
-              ]
-            </span>
-          ))}
       </div>
 
       <form onSubmit={handleSubmit} className="relative border-t p-4">
