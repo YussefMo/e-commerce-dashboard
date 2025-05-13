@@ -154,3 +154,11 @@ interface OrderItems {
   imageUrl: string;
   map(arg0: (item: any) => React.JSX.Element): React.ReactNode;
 }
+
+interface updateOrderStatusProps {
+  id: string;
+  status: string;
+  updatedAt: Date;
+  shippedAt?: Date;
+  deliveredAt?: Date;
+}

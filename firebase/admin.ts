@@ -1,3 +1,4 @@
+import * as admin from 'firebase-admin';
 import { App, cert, getApp, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -24,6 +25,7 @@ function initializeAdminApp() {
         privateKey: privateKey.replace(/\\n/g, '\n')
       })
     });
+    admin.firestore().settings({ ignoreUndefinedProperties: true });
   } catch (initError) {
     console.error('Error initializing Firebase Admin SDK:', initError);
     throw initError; // Re-throw initialization errors

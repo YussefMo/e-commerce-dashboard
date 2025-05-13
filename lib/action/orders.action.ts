@@ -2,6 +2,8 @@
 
 import { db } from '@/firebase/admin';
 import { PAGINATION_PER_PAGE } from '../utils';
+import { revalidatePath } from 'next/cache';
+import { getCurrentUser } from './auth.action';
 
 export async function getAllOrdersWithAction(
   page: number = 1,
@@ -68,4 +70,41 @@ export async function getAllOrders(): Promise<Orders[] | null> {
     id: doc.id,
     ...doc.data()
   })) as Orders[];
+}
+
+export async function updateOrderStatus({
+  id,
+  status,
+  updatedAt,
+  shippedAt,
+  deliveredAt
+}: updateOrderStatusProps) {
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === 'admin';
+  if (isAdmin) {
+    try {
+      await db.collection('orders').doc(id).update({
+        status: status,
+        updatedAt,
+        shippedAt,
+        deliveredAt
+      });
+      revalidatePath('/orders');
+      revalidatePath(`/orders/[id]`);
+      return {
+        success: true,
+        message: 'Product status updated successfully'
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.message || 'some thing went wrong'
+      };
+    }
+  } else {
+    return {
+      success: false,
+      message: 'your not an admin or allowed to do this action'
+    };
+  }
 }

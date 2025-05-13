@@ -2,7 +2,7 @@
 
 import OrdersItemTable from '@/components/orders/OrdersItemTable';
 import { getUserById } from '@/lib/action/auth.action';
-import { getOrderById } from '@/lib/action/orders.action';
+import { getOrderById, updateOrderStatus } from '@/lib/action/orders.action';
 import { usePageContext } from '@/lib/PageContextProvider';
 import { formatDate } from '@/lib/utils';
 import { useParams } from 'next/navigation';
@@ -25,6 +25,8 @@ import {
   Phone,
   Mail
 } from 'lucide-react'; // Added icons for better UI
+import { Button } from '@/components/UI/button';
+import { useForm } from 'react-hook-form';
 
 // Helper function to get status styles and icons
 const getStatusStyles = (status: string | null) => {
@@ -98,9 +100,11 @@ const DetailItem: React.FC<DetailItemProps> = ({
 );
 
 function Page() {
+  const form = useForm();
   const params = useParams();
   const orderId = params?.id as string;
   const { setPageContextData } = usePageContext();
+  const [isChecked, setIsChecked] = useState(false); // Add new state for checkbox
 
   const [data, setData] = useState<Orders>({
     id: '',
@@ -135,6 +139,8 @@ function Page() {
     id: ''
   });
   const [loading, setLoading] = useState(true);
+  const [disable, setDisable] = useState(false);
+  const [trigger, setTrigger] = useState(0);
 
   useEffect(() => {
     if (orderId) {
@@ -158,7 +164,7 @@ function Page() {
       }
       getOrderData();
     }
-  }, [orderId]);
+  }, [orderId, trigger]);
 
   useEffect(() => {
     if (data && data.id) {
@@ -170,6 +176,56 @@ function Page() {
       });
     }
   }, [data, setPageContextData]);
+
+  const onSubmit = async () => {
+    try {
+      setDisable(true);
+      if (data.status === 'pending') {
+        toast.info('updating status');
+        const res = await updateOrderStatus({
+          id: data.id,
+          status: 'processing',
+          updatedAt: new Date()
+        });
+        if (res.success) {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      } else if (data.status === 'processing') {
+        toast.info('updating status');
+        const res = await updateOrderStatus({
+          id: data.id,
+          status: 'shipped',
+          updatedAt: new Date(),
+          shippedAt: new Date()
+        });
+        if (res.success) {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      } else {
+        toast.info('updating status');
+        const res = await updateOrderStatus({
+          id: data.id,
+          status: 'delivered',
+          updatedAt: new Date(),
+          deliveredAt: new Date()
+        });
+        if (res.success) {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      }
+    } catch {
+      toast.error('some thing went wrong');
+    } finally {
+      setDisable(false);
+      setTrigger(Date.now());
+    }
+  };
 
   if (loading) {
     return (
@@ -374,6 +430,47 @@ function Page() {
               </div>
             </div>
           </div>
+          {data.status !== 'delivered' && (
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="bg-card text-card-foreground rounded-xl p-6 shadow-lg lg:col-span-3 lg:col-start-1"
+            >
+              <div className="mb-2">
+                <input
+                  id="check-status"
+                  type="checkbox"
+                  checked={isChecked} // Bind checked state
+                  onChange={(e) => setIsChecked(e.target.checked)} // Update state on change
+                  className="accent-icon focus:ring-icon mr-2 h-4 w-4 cursor-pointer rounded-sm focus:ring-2"
+                />
+                <label
+                  htmlFor="check-status"
+                  className="cursor-pointer text-lg"
+                >
+                  {data.status === 'pending'
+                    ? 'I confirm that the order is now getting prepared and it under processing'
+                    : data.status === 'processing'
+                      ? 'I confirm that the order is now getting shipped to the correct address'
+                      : data.status === 'shipped' &&
+                        'I confirm that the order is now delivered to the costumer'}
+                </label>
+              </div>
+              <div className="flex items-end justify-end">
+                {data.status !== 'delivered' && (
+                  <Button
+                    disabled={!isChecked || disable}
+                    className="disabled:cursor-not-allowed"
+                  >
+                    {data.status === 'pending'
+                      ? 'Mark As Processing'
+                      : data.status === 'processing'
+                        ? 'Mark As Shipped'
+                        : data.status === 'shipped' && 'Mark As Delivered'}
+                  </Button>
+                )}
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
