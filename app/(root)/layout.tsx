@@ -35,7 +35,7 @@ export default async function RootLayout({
         </SideNav>
         <main className="flex-1">
           <Nav />
-          <section className="relative mt-16 h-fit overflow-auto px-4.5 py-7 lg:ml-67">
+          <section className="relative mt-16 h-fit overflow-auto px-4.5 py-7 xl:ml-67">
             {children}
           </section>
         </main>

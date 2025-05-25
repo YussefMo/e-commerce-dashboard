@@ -123,7 +123,7 @@ function SideNav({ children }: { children: React.ReactNode }) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="bg-sidebar-primary text-sidebar-text fixed top-0 bottom-0 left-0 z-890 hidden h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6 lg:flex">
+      <aside className="bg-sidebar-primary text-sidebar-text fixed top-0 bottom-0 left-0 z-890 hidden h-[100dvh] w-67 flex-col justify-between pt-8 pb-8 pl-6 xl:flex">
         <div>
           <Logo width="107" hight="30" />
           <div className="mt-18 flex flex-col flex-wrap gap-3">{navLinks}</div>
@@ -132,7 +132,7 @@ function SideNav({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Mobile/Tablet Sheet Sidebar */}
-      <div className="fixed top-4 left-4 z-880 lg:hidden">
+      <div className="fixed top-4 left-4 z-880 xl:hidden">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon">
