@@ -1,15 +1,15 @@
-'use client';
-
 import DataCard from '@/components/dashboard/DataCard';
 import Filter from '@/components/dashboard/Filter';
 import Latest3Products from '@/components/dashboard/Latest3Products';
 import Spinner from '@/components/Spinner';
-import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
-function Page() {
-  const searchParams = useSearchParams();
-  const last = searchParams.get('last') ?? '7';
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+async function Page({ searchParams }: PageProps) {
+  const { last } = await searchParams;
 
   return (
     <>
@@ -20,8 +20,8 @@ function Page() {
           <p>not available until finishing the store</p>
         </div>
         <div className="col-span-4 col-start-5 row-span-4 flex flex-wrap items-center justify-center gap-2 rounded-md">
-          <Suspense key={last} fallback={<Spinner />}>
-            <DataCard last={last} />
+          <Suspense key={last as string} fallback={<Spinner />}>
+            <DataCard searchParams={last as string} />
           </Suspense>
         </div>
         <div className="bg-card col-span-4 col-start-9 row-span-9 row-start-1 rounded-md p-2">

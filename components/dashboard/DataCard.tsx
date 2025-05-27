@@ -1,20 +1,11 @@
-'use client';
-
 import { getAllOrders } from '@/lib/action/orders.action';
 import { formatCurrency } from '@/lib/utils';
 import { Check, DollarSign, ReceiptText } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
-function DataCard({ last }: { last: string }) {
-  const [orders, setOrders] = useState<Orders[] | null>([]);
+async function DataCard({ searchParams }: { searchParams: string }) {
+  const last = searchParams ?? '7';
 
-  useEffect(() => {
-    async function getData() {
-      const data = await getAllOrders(last);
-      setOrders(data);
-    }
-    getData();
-  }, [last]);
+  const orders = await getAllOrders(last);
 
   const ordersCount = orders?.length;
   const totalSales = orders!.reduce(
