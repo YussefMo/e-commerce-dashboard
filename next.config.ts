@@ -10,12 +10,18 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '30mb'
+    },
+    staleTimes: {
+      dynamic: 30,
+      static: 100
     }
   },
   images: {
-    remotePatterns: [{
-      hostname: 'res.cloudinary.com'
-    }]
+    remotePatterns: [
+      {
+        hostname: 'res.cloudinary.com'
+      }
+    ]
   }
 };
 

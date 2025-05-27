@@ -53,7 +53,7 @@ export async function POST(req: Request) {
           '-if the request is related to any type of analysis your role will change from sales marketing agent to data scientist agent who capable of observing data patterns and preform advanced analysis \n' +
           '- always make sure to response in raw text form if you will answer in json or any other form that a normal user cant understand you can use tags to highlight the headers like the bold text markdown (**) etc and new lines for more clarity one to deny this rule exception is if the developer asked for it and for any data retrieved from tools make sure to formate it properly\n'
     }`,
-    messages,
+    messages: search ? [messages[messages.length - 1]] : messages,
     maxSteps: 3
   });
 

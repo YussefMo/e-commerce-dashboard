@@ -63,13 +63,31 @@ export async function getOrderById(orderId: string): Promise<Orders | null> {
   } as Orders;
 }
 
-export async function getAllOrders(): Promise<Orders[] | null> {
-  const orders = await db.collection('orders').get();
+export async function getAllOrders(last?: string): Promise<Orders[] | null> {
+  let ordersRef: FirebaseFirestore.Query = db.collection('orders');
 
-  return orders.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data()
-  })) as Orders[];
+  if (last && last !== 'all') {
+    const days = parseInt(last);
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    ordersRef = ordersRef.where('createdAt', '>=', date);
+  }
+
+  const orders = await ordersRef.get();
+
+  const fullData = orders.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      createdAt: doc.data().createdAt.toDate().toISOString(),
+      updatedAt: doc.data().updatedAt?.toDate().toISOString(),
+      shippedAt: doc.data().shippedAt?.toDate().toISOString(),
+      deliveredAt: doc.data().deliveredAt?.toDate().toISOString()
+    };
+  }) as Orders[];
+
+  return fullData;
 }
 
 export async function updateOrderStatus({
@@ -90,7 +108,7 @@ export async function updateOrderStatus({
         deliveredAt
       });
       revalidatePath('/orders');
-      revalidatePath(`/orders/[id]`);
+      revalidatePath(`/orders/${id}`);
       return {
         success: true,
         message: 'Product status updated successfully'

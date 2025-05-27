@@ -131,7 +131,7 @@ function AiChat() {
   return (
     <div
       key={initialMessages ? 'loaded' : 'loading'}
-      className="bg-card mb-25 flex h-[600px] w-[400px] flex-col overflow-auto rounded-lg border shadow-2xl max-sm:w-[300px] dark:shadow-lg dark:shadow-stone-400"
+      className="bg-card mb-25 flex h-[600px] w-[400px] flex-col overflow-auto rounded-lg border shadow-2xl max-sm:w-full dark:shadow-lg dark:shadow-stone-400"
     >
       <div
         ref={messagesEndRef} // Attach the ref to the messages container

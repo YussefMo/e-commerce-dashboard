@@ -15,6 +15,7 @@ export async function addProduct(data: AddProductProp) {
         createdAt: new Date()
       });
       revalidatePath('/products');
+      revalidatePath('/');
       return {
         success: true,
         message: 'product added successfully'
@@ -76,12 +77,21 @@ export async function getAllProductsWithAction(
 }
 
 export async function getAllProducts(): Promise<Products[] | null> {
-  const products = await db.collection('products').get();
+  const products = await db
+    .collection('products')
+    .orderBy('createdAt', 'desc')
+    .get();
 
-  return products.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data()
-  })) as Products[];
+  const fullData = products.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      createdAt: data.createdAt?.toDate().toISOString()
+    };
+  }) as Products[];
+
+  return fullData;
 }
 
 export async function getProductById(
