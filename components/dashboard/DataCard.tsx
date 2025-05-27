@@ -4,12 +4,9 @@ import { getAllOrders } from '@/lib/action/orders.action';
 import { formatCurrency } from '@/lib/utils';
 import { Check, DollarSign, ReceiptText } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 
-function DataCard() {
+function DataCard({ last }: { last: string }) {
   const [orders, setOrders] = useState<Orders[] | null>([]);
-  const searchParams = useSearchParams();
-  const last = searchParams.get('last') ?? '7';
 
   useEffect(() => {
     async function getData() {
