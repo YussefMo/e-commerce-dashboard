@@ -6,7 +6,7 @@ interface TopProductData {
   sales: number;
 }
 
-async function PiChartContainer({ last }: { last: string }) {
+async function PiChartContainer({ last = '7' }: { last: string }) {
   const orders = await getAllOrders(last);
 
   let topProducts: TopProductData[] = [];

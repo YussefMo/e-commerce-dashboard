@@ -35,7 +35,7 @@ async function processOrdersForChart(orders: Orders[]): Promise<ChartData[]> {
   }));
 }
 
-async function LineChartContainer({ last }: LineChartProps) {
+async function LineChartContainer({ last = '7' }: LineChartProps) {
   const orders = await getAllOrders(last);
 
   let processedData: ChartData[] = [];

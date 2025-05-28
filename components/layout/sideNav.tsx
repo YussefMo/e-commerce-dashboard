@@ -6,6 +6,7 @@ import {
   LogOut,
   Mail,
   Menu,
+  Percent,
   ReceiptText,
   Settings,
   ShoppingBasket
@@ -58,6 +59,14 @@ function SideNav({ children }: { children: React.ReactNode }) {
         icon={<Mail className={pathName === '/messages' ? 'text-icon' : ''} />}
         title="Messages"
         active={pathName === '/messages'}
+      />
+      <SideNavLink
+        href="/coupons"
+        icon={
+          <Percent className={pathName === '/coupons' ? 'text-icon' : ''} />
+        }
+        title="Coupons"
+        active={pathName === '/coupons'}
       />
       <SideNavLink
         href="/settings"
