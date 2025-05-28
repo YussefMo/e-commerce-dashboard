@@ -21,26 +21,27 @@ async function Page({ searchParams }: PageProps) {
           <h1>store visits</h1>
           <p>not available until finishing the store</p>
         </div>
-        <div className="col-span-4 col-start-5 row-span-4 flex flex-wrap items-center justify-center gap-2 rounded-md">
+
+        <div className="bg-card col-span-8 col-start-5 row-span-4 flex flex-wrap items-center justify-center gap-2 rounded-md">
           <Suspense key={last as string} fallback={<Spinner />}>
             <DataCard searchParams={last as string} />
           </Suspense>
         </div>
-        <div className="bg-card col-span-4 col-start-9 row-span-9 row-start-1 rounded-md p-3">
-          4
-        </div>
-        <div className="bg-card col-span-8 row-span-5 row-start-5 rounded-md p-3">
-          <Suspense fallback={<Spinner />}>
+
+        <div className="bg-card col-span-9 row-span-5 row-start-5 rounded-md p-3">
+          <Suspense key={last as string} fallback={<Spinner />}>
             <Latest3Products />
           </Suspense>
         </div>
-        <div className="bg-card col-span-9 row-span-5 row-start-10 rounded-md p-3">
-          <Suspense fallback={<Spinner />}>
+
+        <div className="bg-card col-span-12 row-span-5 row-start-10 rounded-md p-3">
+          <Suspense key={last as string} fallback={<Spinner />}>
             <LineChartContainer last={last as string} />
           </Suspense>
         </div>
-        <div className="bg-card col-span-3 col-start-10 row-span-5 row-start-10 rounded-md p-3">
-          <Suspense fallback={<Spinner />}>
+
+        <div className="bg-card col-span-3 col-start-10 row-span-5 row-start-5 rounded-md p-3">
+          <Suspense key={last as string} fallback={<Spinner />}>
             <PiChartContainer last={last as string} />
           </Suspense>
         </div>

@@ -48,7 +48,7 @@ function StatsCard({
   value: string | number | undefined;
 }) {
   return (
-    <div className="bg-card border-icon w-[48%] rounded-lg border p-2 text-center shadow-md max-sm:w-full">
+    <div className="bg-card border-icon w-[30%] rounded-lg border p-2 text-center shadow-md max-sm:w-full">
       <div className="text-icon mx-auto mb-2 w-fit">{icon}</div>
       <h2 className="text-card-foreground mb-1 text-lg font-semibold">
         {title}
