@@ -162,3 +162,14 @@ interface updateOrderStatusProps {
   shippedAt?: Date;
   deliveredAt?: Date;
 }
+
+interface Messages {
+  id: string;
+  userId: string;
+  userName: string;
+  email: string;
+  title: string;
+  message: string;
+  resolve: boolean;
+  createdAt: string | { seconds: number; nanoseconds: number } | null;
+}

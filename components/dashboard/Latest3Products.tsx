@@ -1,10 +1,12 @@
 import { getAllProducts } from '@/lib/action/product.action';
 import TableBody from '../products/TableBody';
 
+let latestProducts: Products[];
+
 async function Latest3Products() {
   const products = await getAllProducts();
 
-  const latestProducts = products ? products.slice(0, 3) : [];
+  latestProducts = products ? products.slice(0, 3) : [];
 
   return (
     <>
@@ -23,3 +25,4 @@ async function Latest3Products() {
 }
 
 export default Latest3Products;
+export { latestProducts };

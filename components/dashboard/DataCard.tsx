@@ -2,20 +2,21 @@ import { getAllOrders } from '@/lib/action/orders.action';
 import { formatCurrency } from '@/lib/utils';
 import { Check, DollarSign, ReceiptText } from 'lucide-react';
 
+let ordersCount: number | undefined;
+let totalSales: number;
+let confirmedOrdersCount: number | undefined;
+
 async function DataCard({ searchParams }: { searchParams: string }) {
   const last = searchParams ?? '7';
 
   const orders = await getAllOrders(last);
 
-  const ordersCount = orders?.length;
-  const totalSales = orders!.reduce(
-    (total, stay) => total + stay.totalAmount,
-    0
-  );
+  ordersCount = orders?.length;
+  totalSales = orders!.reduce((total, stay) => total + stay.totalAmount, 0);
   const confirmedOrders = orders?.filter(
     (stay) => stay.status === 'shipped' || stay.status === 'delivered'
   );
-  const confirmedOrdersCount = confirmedOrders?.length;
+  confirmedOrdersCount = confirmedOrders?.length;
 
   return (
     <>
@@ -59,3 +60,4 @@ function StatsCard({
 }
 
 export default DataCard;
+export { ordersCount, totalSales, confirmedOrdersCount };

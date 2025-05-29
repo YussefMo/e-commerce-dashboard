@@ -6,10 +6,10 @@ interface TopProductData {
   sales: number;
 }
 
+let topProducts: TopProductData[] = [];
+
 async function PiChartContainer({ last = '7' }: { last: string }) {
   const orders = await getAllOrders(last);
-
-  let topProducts: TopProductData[] = [];
 
   if (orders) {
     const productSales: { [key: string]: number } = {};
@@ -36,3 +36,4 @@ async function PiChartContainer({ last = '7' }: { last: string }) {
 }
 
 export default PiChartContainer;
+export { topProducts };

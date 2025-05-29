@@ -12,6 +12,10 @@ interface LineChartProps {
   last: string;
 }
 
+let processedData: ChartData[] = [];
+let currentPeriodSales: number = 0;
+let salesChange: number = 0;
+
 async function processOrdersForChart(orders: Orders[]): Promise<ChartData[]> {
   const dailyData: { [key: string]: { sells: number; orders: number } } = {};
 
@@ -37,10 +41,6 @@ async function processOrdersForChart(orders: Orders[]): Promise<ChartData[]> {
 
 async function LineChartContainer({ last = '7' }: LineChartProps) {
   const orders = await getAllOrders(last);
-
-  let processedData: ChartData[] = [];
-  let currentPeriodSales: number = 0;
-  let salesChange: number = 0;
 
   if (orders) {
     processedData = await processOrdersForChart(orders);
@@ -70,3 +70,4 @@ async function LineChartContainer({ last = '7' }: LineChartProps) {
 }
 
 export default LineChartContainer;
+export { processedData, currentPeriodSales, salesChange };

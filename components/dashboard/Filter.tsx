@@ -124,7 +124,7 @@ function Filter() {
               90 Days
             </Button>
             <Button
-              filter="360"
+              filter="365"
               activeFilter={activeFilter}
               filterHandler={filterHandler}
             >

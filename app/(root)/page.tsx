@@ -1,3 +1,4 @@
+import DashboardContextPass from '@/components/dashboard/DashboardContextPass';
 import DataCard from '@/components/dashboard/DataCard';
 import Filter from '@/components/dashboard/Filter';
 import Latest3Products from '@/components/dashboard/Latest3Products';
@@ -15,6 +16,7 @@ async function Page({ searchParams }: PageProps) {
 
   return (
     <>
+      <DashboardContextPass last={last as string} />
       <Filter />
       <div className="mt-20 grid grid-cols-12 grid-rows-14 gap-4 max-xl:flex max-xl:flex-col max-xl:gap-4">
         <div className="col-span-4 row-span-4 rounded-md bg-gradient-to-r from-[#ADCDFC] to-[#CBACFE] p-3 max-xl:col-span-full dark:bg-gradient-to-tr dark:from-[#92FFC0] dark:to-[#0064FF]">
@@ -29,7 +31,7 @@ async function Page({ searchParams }: PageProps) {
         </div>
 
         <div className="bg-card col-span-9 row-span-5 row-start-5 rounded-md p-3">
-          <Suspense key={last as string} fallback={<Spinner />}>
+          <Suspense fallback={<Spinner />}>
             <Latest3Products />
           </Suspense>
         </div>
