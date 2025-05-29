@@ -1,17 +1,32 @@
-import { getAllOrdersWithAction } from '@/lib/action/orders.action';
+import {
+  getAllOrdersWithAction,
+  getOrderById
+} from '@/lib/action/orders.action';
 import React from 'react';
 import TableBody from './TableBody';
 import TableFooter from './TableFooter';
 import { ReceiptText } from 'lucide-react';
+import SearchByID from './SearchByID';
 
 async function OrdersTable({
   currentPage,
   children,
-  status
+  status,
+  id
 }: OrdersTableProps) {
-  const response = await getAllOrdersWithAction(currentPage, status);
-  const orders = response?.orders || [];
-  const totalPages = response?.totalPages || 1;
+  let orders: Orders[] = [];
+  let totalPages = 1;
+
+  if (id) {
+    const order = await getOrderById(id);
+    if (order) {
+      orders = [order];
+    }
+  } else {
+    const response = await getAllOrdersWithAction(currentPage, status);
+    orders = response?.orders || [];
+    totalPages = response?.totalPages || 1;
+  }
 
   return (
     <div className="bg-card text-foreground mt-20 rounded-lg p-4 shadow-md sm:p-6">
@@ -19,6 +34,7 @@ async function OrdersTable({
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <ReceiptText /> Orders List
         </h2>
+        <SearchByID />
         {/* @ts-ignore */}
         {React.cloneElement(children, {
           currentPage: currentPage,

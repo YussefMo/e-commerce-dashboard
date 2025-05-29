@@ -24,6 +24,7 @@ export async function getAllMessages() {
 }
 
 export async function getMessagesById(id: string) {
+  if (id === 'all') return;
   const messages = await db.collection('messages').doc(id).get();
 
   return {

@@ -10,8 +10,8 @@ import { Button } from '../UI/button';
 import { toast } from 'sonner';
 import Spinner from '../Spinner';
 
-function MessageContent({ id }: { id: string }) {
-  const [message, setMessage] = useState<Messages | null>(null);
+function MessageContent({ id = 'all' }: { id: string }) {
+  const [message, setMessage] = useState<Messages | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -94,6 +94,7 @@ interface OrdersTableProps {
   currentPage: number;
   children: React.ReactNode;
   status: string | undefined;
+  id: string | undefined;
 }
 
 interface Orders {
@@ -135,6 +136,7 @@ interface searchParamsOrders {
   searchParams: {
     page?: string;
     status?: string;
+    id?: string;
   };
 }
 
