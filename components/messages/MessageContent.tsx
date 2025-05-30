@@ -43,7 +43,7 @@ function MessageContent({ id = 'all' }: { id: string }) {
     }
   };
 
-  if (!id) {
+  if (!id || id === 'all') {
     return (
       <div>
         <p>select a message to display</p>

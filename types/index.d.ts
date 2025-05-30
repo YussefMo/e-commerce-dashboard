@@ -175,3 +175,25 @@ interface Messages {
   resolve: boolean;
   createdAt: string | { seconds: number; nanoseconds: number } | null;
 }
+
+interface Coupons {
+  id: string;
+  couponCode: string;
+  createdAt: string | { seconds: number; nanoseconds: number } | null;
+  StartDate: string | { seconds: number; nanoseconds: number } | null;
+  ExpireDate: string | { seconds: number; nanoseconds: number } | null;
+  discount: number;
+  map(arg0: (item: any) => React.JSX.Element): React.ReactNode;
+}
+
+interface CouponsTableProps {
+  currentPage: number;
+  children: React.ReactNode;
+}
+
+interface AddCouponProp {
+  couponCode: string;
+  StartDate: Date;
+  ExpireDate: Date;
+  discount: number;
+}
