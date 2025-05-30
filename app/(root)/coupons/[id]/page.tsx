@@ -11,6 +11,8 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { useParams } from 'next/navigation';
+import Spinner from '@/components/Spinner';
+import { usePageContext } from '@/lib/PageContextProvider';
 
 // Define the schema for the coupon form
 const updateCouponFormSchema = z.object({
@@ -28,6 +30,7 @@ type UpdateCouponFormValues = z.infer<typeof updateCouponFormSchema>;
 export default function Page() {
   const { id } = useParams();
   const couponId = Array.isArray(id) ? id[0] : id;
+  const { setPageContextData } = usePageContext();
 
   const form = useForm<UpdateCouponFormValues>({
     // @ts-ignore
@@ -90,8 +93,21 @@ export default function Page() {
     setSubmitting(false);
   };
 
+  const watchedValues = form.watch();
+
+  useEffect(() => {
+    setPageContextData({ pageName: 'edit-coupon', watchedValues });
+  }, [JSON.stringify(watchedValues), setPageContextData]);
+
   if (loading) {
-    return <div className="text-center">Loading coupon...</div>;
+    return (
+      <div className="bg-background text-foreground min-h-screen p-4 sm:p-6 lg:p-8">
+        <div className="bg-card mx-auto max-w-4xl rounded-2xl p-6 shadow-xl sm:p-8 lg:p-10">
+          <Spinner />
+          <p className="text-center">loading coupon data...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

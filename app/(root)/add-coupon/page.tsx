@@ -5,8 +5,9 @@ import FormFieldComp from '@/components/FormField';
 import { Button } from '@/components/UI/button';
 import { Form } from '@/components/UI/form';
 import { addCoupon } from '@/lib/action/coupons.action';
+import { usePageContext } from '@/lib/PageContextProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -25,6 +26,8 @@ const addCouponFormSchema = z.object({
 type AddCouponFormValues = z.infer<typeof addCouponFormSchema>;
 
 export default function Page() {
+  const { setPageContextData } = usePageContext();
+
   const form = useForm<AddCouponFormValues>({
     // @ts-ignore
     resolver: zodResolver(addCouponFormSchema),
@@ -56,6 +59,12 @@ export default function Page() {
     }
     setSubmitting(false);
   };
+
+  const watchedValues = form.watch();
+
+  useEffect(() => {
+    setPageContextData({ pageName: 'add-coupon', watchedValues });
+  }, [JSON.stringify(watchedValues), setPageContextData]);
 
   return (
     <div className="bg-background text-foreground min-h-screen p-4 sm:p-6 lg:p-8">
