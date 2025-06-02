@@ -76,7 +76,7 @@ export default function Page() {
         toast.error('Coupon ID is missing.');
         return;
       }
-      toast.info('Updating coupon...');
+      toast.loading('Updating coupon...');
       const result = await updateCoupon(couponId, data);
 
       if (result.success) {

@@ -84,7 +84,7 @@ export default function Page() {
 
       if (data.imageFiles && data.imageFiles.length > 0) {
         // If new files are provided, delete old (if any) and upload new ones
-        toast.info('Replacing images... This may take a moment.');
+        toast.loading('Replacing images... This may take a moment.');
         finalImageUrls = await replaceImages(
           existingImageUrls,
           data.imageFiles

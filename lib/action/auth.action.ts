@@ -115,3 +115,37 @@ export async function getAllUsers(): Promise<User[] | null> {
     ...doc.data()
   })) as User[];
 }
+
+export async function signUp(params: SignUpParams) {
+  const { uid, name, email, role } = params;
+
+  try {
+    const userRecord = await db.collection('users').doc(uid).get();
+
+    if (userRecord.exists) {
+      console.log('User already exists in Firestore');
+      return {
+        success: false,
+        message: 'User already exists. Please sign in.'
+      };
+    }
+
+    // Creating the user in Firestore
+    await db.collection('users').doc(uid).set({
+      name,
+      email,
+      role
+    });
+
+    return {
+      success: true,
+      message: 'Account created successfully. Please sign in.'
+    };
+  } catch (error: any) {
+    console.log('Error during user creation in Firestore:', error);
+    return {
+      success: false,
+      message: 'Failed to create account. Please try again.'
+    };
+  }
+}

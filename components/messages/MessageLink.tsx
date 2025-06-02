@@ -4,7 +4,7 @@ function MessageLink({ message }: { message: Messages }) {
   return (
     <Link
       href={`/messages?id=${message.id}`}
-      className={`hover:bg-accent block border-b p-4 ${message.resolve ? 'bg-gray-100' : 'bg-white'}`}
+      className={`hover:bg-accent block border-b p-4 ${message.resolve ? 'bg-accent' : 'bg-card'}`}
     >
       <div className="flex items-center justify-between">
         <h3 className="font-bold">{message.title}</h3>

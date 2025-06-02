@@ -18,7 +18,7 @@ async function Notification() {
       <PopoverTrigger className="relative">
         <Bell className="cursor-pointer text-white max-sm:hidden" />
         {isNotify && (
-          <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-red-500 text-xs text-white" />
+          <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-red-500 text-xs text-white max-sm:hidden" />
         )}
       </PopoverTrigger>
       <PopoverContent className="bg-card text-card-foreground w-80 rounded-lg p-4 shadow-lg">

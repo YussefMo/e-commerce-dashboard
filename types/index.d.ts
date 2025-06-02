@@ -197,3 +197,10 @@ interface AddCouponProp {
   ExpireDate: Date;
   discount: number;
 }
+
+interface SignUpParams {
+  uid: string;
+  name: string;
+  email: string;
+  role: string;
+}
