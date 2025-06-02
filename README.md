@@ -1,4 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E-commerce Dashboard
+
+This project is a comprehensive e-commerce dashboard built with Next.js,
+designed to provide a robust and intuitive interface for managing products,
+orders, coupons, and user roles. It features a modern UI, real-time data
+updates, and secure authentication.
+
+## Live Demo
+
+Experience the dashboard live here:
+<mcurl name="E-commerce Dashboard Live Demo" url="https://e-commerce-dashboard-theta.vercel.app/"></mcurl>
+
+## Features
+
+- **AI Assistant**: An integrated AI assistant capable of reading the web UI,
+  performing actions on the database, and conducting web searches to assist with
+  various tasks.
+- **User Authentication**: Secure login and user management with different roles
+  (admin, read-only).
+- **Product Management**: Add, edit, and delete products with detailed
+  information, including images and variations.
+- **Order Management**: Track and update order statuses from pending to
+  delivered.
+- **Coupon Management**: Create and manage discount coupons with start and
+  expiry dates.
+- **User Management**: Create and manage admin and read-only users.
+- **Responsive Design**: Optimized for various screen sizes.
+- **Firebase Integration**: Utilizes Firebase for backend services and
+  authentication.
 
 ## Getting Started
 
@@ -14,23 +42,154 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the
+result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+├── .gitignore
+├── .prettierrc
+├── .vscode\
+│   └── settings.json
+├── README.md
+├── app\
+│   ├── (auth)\
+│   │   ├── layout.tsx
+│   │   └── log-in\
+│   │       └── page.tsx
+│   ├── (root)\
+│   │   ├── add-coupon\
+│   │   │   └── page.tsx
+│   │   ├── add-product\
+│   │   │   └── page.tsx
+│   │   ├── coupons\
+│   │   │   ├── [id]\
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── messages\
+│   │   │   └── page.tsx
+│   │   ├── orders\
+│   │   │   ├── [id]\
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── page.tsx
+│   │   ├── products\
+│   │   │   ├── [id]\
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   └── settings\
+│   │       └── page.tsx
+│   ├── api\
+│   │   └── chat\
+│   │       └── route.ts
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── loading.tsx
+├── cloudinary\
+│   └── cloudinary.ts
+├── components.json
+├── components\
+│   ├── AiChat.tsx
+│   ├── AiChatToggler.tsx
+│   ├── DateSelector.tsx
+│   ├── DragAndDropInput.tsx
+│   ├── Dropdown.tsx
+│   ├── FormField.tsx
+│   ├── InputArray.tsx
+│   ├── Notification.tsx
+│   ├── ProductVarieties.tsx
+│   ├── Spinner.tsx
+│   ├── UI\
+│   │   ├── alert-dialog.tsx
+│   │   ├── button.tsx
+│   │   ├── calendar.tsx
+│   │   ├── card.tsx
+│   │   ├── form.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── popover.tsx
+│   │   ├── select.tsx
+│   │   ├── sheet.tsx
+│   │   ├── sonner.tsx
+│   │   └── themeToggle.tsx
+│   ├── coupons\
+│   │   ├── CouponsPageContext.tsx
+│   │   ├── CouponsTable.tsx
+│   │   ├── TableBody.tsx
+│   │   └── TableFooter.tsx
+│   ├── dashboard\
+│   │   ├── DashboardContextPass.tsx
+│   │   ├── DataCard.tsx
+│   │   ├── Filter.tsx
+│   │   ├── Latest3Products.tsx
+│   │   ├── LineChart.tsx
+│   │   ├── LineChartContainer.tsx
+│   │   ├── PiChart.tsx
+│   │   └── PiChartContainer.tsx
+│   ├── icons\
+│   │   └── logo.tsx
+│   ├── layout\
+│   │   ├── nav.tsx
+│   │   ├── sideNav.tsx
+│   │   ├── sideNavLink.tsx
+│   │   ├── userProfile.tsx
+│   │   └── userProfileSkeleton.tsx
+│   ├── login-form.tsx
+│   ├── messages\
+│   │   ├── MessageContent.tsx
+│   │   ├── MessageLink.tsx
+│   │   └── MessagesHolder.tsx
+│   ├── orders\
+│   │   ├── Filter.tsx
+│   │   ├── OrderContextPass.tsx
+│   │   ├── OrdersItemTable.tsx
+│   │   ├── OrdersTable.tsx
+│   │   ├── SearchByID.tsx
+│   │   ├── TableBody.tsx
+│   │   └── TableFooter.tsx
+│   ├── products\
+│   │   ├── DeleteAlert.tsx
+│   │   ├── ProductContextPass.tsx
+│   │   ├── ProductsTable.tsx
+│   │   ├── SearchInput.tsx
+│   │   ├── TableBody.tsx
+│   │   ├── TableFooter.tsx
+│   │   └── products-table-skeleton.tsx
+│   ├── settings\
+│   │   ├── AdminUser.tsx
+│   │   ├── ReadOnlyUser.tsx
+│   │   └── UpdateUser.tsx
+│   └── themeProvider.tsx
+├── eslint.config.mjs
+├── firebase\
+│   ├── admin.ts
+│   └── client.ts
+├── lib\
+│   ├── PageContextProvider.tsx
+│   ├── action\
+│   │   ├── auth.action.ts
+│   │   ├── coupons.action.ts
+│   │   ├── messages..action.ts
+│   │   ├── orders.action.ts
+│   │   └── product.action.ts
+│   ├── ai.tools.ts
+│   ├── schemas\
+│   │   └── product-schema.ts
+│   ├── utils\
+│   │   └── form-helpers.ts
+│   └── utils.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── public\
+│   ├── Opior.svg
+│   └── profile.svg
+├── tsconfig.json
+├── types\
+│   └── index.d.ts
+└── vercel.json
+```
