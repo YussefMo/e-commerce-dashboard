@@ -8,7 +8,7 @@ updates, and secure authentication.
 ## Live Demo
 
 Experience the dashboard live here:
-<mcurl name="E-commerce Dashboard Live Demo" url="https://e-commerce-dashboard-theta.vercel.app/"></mcurl>
+[E-commerce Dashboard Live Demo](https://e-commerce-dashboard-theta.vercel.app/)
 
 ## Features
 
