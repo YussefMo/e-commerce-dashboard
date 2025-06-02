@@ -58,7 +58,7 @@ function DeleteAlert({ product }: DeleteAlert) {
             <AlertDialogAction
               onClick={async () => {
                 if (productToDelete) {
-                  toast.loading('deleting in progress');
+                  toast.info('deleting in progress');
                   try {
                     const res = await deleteProduct(
                       productToDelete.id,

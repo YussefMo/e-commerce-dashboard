@@ -181,7 +181,7 @@ function Page() {
     try {
       setDisable(true);
       if (data.status === 'pending') {
-        toast.loading('updating status');
+        toast.info('updating status');
         const res = await updateOrderStatus({
           id: data.id,
           status: 'processing',
@@ -193,7 +193,7 @@ function Page() {
           toast.error(res.message);
         }
       } else if (data.status === 'processing') {
-        toast.loading('updating status');
+        toast.info('updating status');
         const res = await updateOrderStatus({
           id: data.id,
           status: 'shipped',
@@ -206,7 +206,7 @@ function Page() {
           toast.error(res.message);
         }
       } else {
-        toast.loading('updating status');
+        toast.info('updating status');
         const res = await updateOrderStatus({
           id: data.id,
           status: 'delivered',

@@ -44,7 +44,7 @@ export default function Page() {
   const onSubmit = async (data: AddCouponFormValues) => {
     setSubmitting(true);
     try {
-      toast.loading('adding coupon');
+      toast.info('adding coupon');
       const result = await addCoupon(data);
 
       if (result.success) {

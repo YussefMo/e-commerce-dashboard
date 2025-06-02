@@ -33,7 +33,7 @@ function MessageContent({ id = 'all' }: { id: string }) {
   }, [id]);
 
   const updateMessage = async () => {
-    toast.loading('Marking message as read...');
+    toast.info('Marking message as read...');
     try {
       await updateMessageStatus(id);
       toast.success('Message marked as read');

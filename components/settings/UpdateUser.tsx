@@ -58,7 +58,7 @@ export default function UpdateUser() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      toast.loading('Updating password...');
+      toast.info('Updating password...');
       const auth = getAuth();
       const user = auth.currentUser;
 

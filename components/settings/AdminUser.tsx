@@ -34,7 +34,7 @@ function AdminUser() {
 
     const user = await getCurrentUser();
     if (user?.role === 'admin') {
-      toast.loading('creating admin user');
+      toast.info('creating admin user');
 
       const userCredential = await createUserWithEmailAndPassword(
         auth,

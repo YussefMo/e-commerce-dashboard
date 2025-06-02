@@ -34,7 +34,7 @@ function ReadOnlyUser() {
 
     const user = await getCurrentUser();
     if (user?.role === 'admin') {
-      toast.loading('creating read-only user');
+      toast.info('creating read-only user');
 
       const userCredential = await createUserWithEmailAndPassword(
         auth,
