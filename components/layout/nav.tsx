@@ -1,6 +1,7 @@
-import { Bell, CirclePlus, Mail } from 'lucide-react';
+import { CirclePlus, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Notification from '../Notification';
 import ThemeToggle from '../UI/themeToggle';
 
 function Nav() {
@@ -17,7 +18,7 @@ function Nav() {
           <Link href="/messages">
             <Mail className="cursor-pointer text-white max-sm:hidden" />
           </Link>
-          <Bell className="cursor-pointer text-white max-sm:hidden" />
+          <Notification />
           <Image
             className="mr-3 ml-[33px] cursor-pointer rounded-md"
             src="/profile.svg"

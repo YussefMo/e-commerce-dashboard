@@ -23,6 +23,24 @@ export async function getAllMessages() {
   });
 }
 
+export async function getMessagesWithAction(): Promise<Messages[]> {
+  const messages = await db
+    .collection('messages')
+    .where('resolve', '==', false)
+    .get();
+
+  const fullData = messages.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      createdAt: data.createdAt?.toDate().toISOString()
+    };
+  }) as Messages[];
+
+  return fullData;
+}
+
 export async function getMessagesById(id: string) {
   if (id === 'all') return;
   const messages = await db.collection('messages').doc(id).get();
