@@ -58,20 +58,25 @@ export default function UpdateUser() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      toast.info('Updating password...');
-      const auth = getAuth();
-      const user = auth.currentUser;
-
-      if (user) {
-        await firebaseUpdatePassword(user, values.password);
-        toast.success('Password updated successfully!');
-        form.reset({
-          email: values.email, // Keep the email pre-filled after reset
-          password: '',
-          confirmPassword: ''
-        });
+      const userCheck = await getCurrentUser();
+      if (userCheck?.role === 'read-only') {
+        return toast.info('you dont have the permission to edit password');
       } else {
-        toast.error('No user is currently signed in.');
+        toast.info('Updating password...');
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (user) {
+          await firebaseUpdatePassword(user, values.password);
+          toast.success('Password updated successfully!');
+          form.reset({
+            email: values.email, // Keep the email pre-filled after reset
+            password: '',
+            confirmPassword: ''
+          });
+        } else {
+          toast.error('No user is currently signed in.');
+        }
       }
     } catch (error: any) {
       toast.error(error.message || 'Failed to update password.');
